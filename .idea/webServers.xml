@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="3be567da-4c72-494b-be0c-de0e5c16dd7a" name="218.236.58.143">
+        <fileTransfer rootFolder="/home/simg/hserver" accessType="SFTP" host="218.236.58.143" port="30041" sshConfigId="7bb73b91-81c3-43eb-8335-767d681eed73" sshConfig="HYUNDAI_IDC_TEST">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

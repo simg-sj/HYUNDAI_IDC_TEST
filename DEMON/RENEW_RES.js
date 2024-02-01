@@ -21,11 +21,12 @@ const underwriteService = require("../SERVICES/underwriteService");
 const serviceList = require("../CONFIG/service_config");
 var services = new serviceList();
 var svs = services[deployConfig.deploy];
-var banList = [ 2,6 ]; // 작동금지 업체
+var banList = [ 2,3,4,5,6,7,8,9,10 ]; // 작동금지 업체
 // var banList = [ ]; // 작동금지 업체
 
 
 var BUSINESSDAY =  _dateUtil.GET_DATE("YYMMDD", "DAY",-1);
+BUSINESSDAY = '20240125';
 fileRead(BUSINESSDAY);
 
 cron.schedule('50 10 09 * * *', () => {
@@ -40,7 +41,10 @@ async function fileRead( BUSINESSDAY){
     var yyyymmdd = BUSINESSDAY;
     var fileName = "MT03_"+yyyymmdd;
     var REMOTEPATH = "/home/hyundai_user001/SEND/"+fileName;
-    if(sftpConfig=="development"){
+    console.log('deployConfig : ',deployConfig);
+    console.log('sftpConfig : ',sftpConfig);
+    if(deployConfig.deploy==="development"){
+        console.log('테스트계~');
         REMOTEPATH = "/home/hyundai_user002/SEND/"+fileName;
     }
 
@@ -123,7 +127,7 @@ function queryStart(service, valueRow, BUSINESSDAY){
 
 
             console.log(service.type);
-            var returnValues = underwriteService.UNDERWRITE_READ(valueRow, service.bpk, BUSINESSDAY);
+            var returnValues = underwriteService.UNDERWRITE_READ(valueRow, service.bpk, BUSINESSDAY); // 심사결과 가져오는 모듈
             // console.log(service.serviceName, service.type, returnValues);
 
             var newGroup = arrayGrouping(returnValues, 1000);

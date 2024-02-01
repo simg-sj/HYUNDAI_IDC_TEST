@@ -146,11 +146,12 @@ module.exports = {
             }
 
             // 관계 코드
-            if(obj.relation){
-                soyuJuRelation = '11';
-            }else{
-                soyuJuRelation = '11'; // 만약값이없다면 101본인으로
-            }
+            // if(obj.relation){
+            //     soyuJuRelation = '11';
+            // }else{
+            //     soyuJuRelation = '11'; // 만약값이없다면 101본인으로
+            // }
+            soyuJuRelation = obj.relation; // 관계코드 삽입 [ 2024-01 By 오정현 ]
 
 
 
@@ -346,7 +347,7 @@ module.exports = {
             carType = _util.cutByLen(carType, 2);
             // damboType = _util.cutByLen(damboType, 1);
             // soyuJu = _util.cutByLen(soyuJu, 1);
-            // soyuJuRelation = _util.cutByLen(soyuJuRelation, 3);
+            soyuJuRelation = _util.cutByLen(soyuJuRelation, 3);
             soyujaName = _util.cutByLen(soyujaName, 20);
             soyujaCell = _util.cutByLen(soyujaCell, 60);
             soyujaJumin = _util.cutByLen(soyujaJumin, 60);
@@ -474,7 +475,7 @@ module.exports = {
                 v.push('Y');
 
 
-                    bikevalue.push(v);
+                bikevalue.push(v);
 
             }
 
@@ -483,8 +484,8 @@ module.exports = {
 
         }
 
-            console.log(matchbpk,  bikevalue.length);
-            return bikevalue;
+        console.log(matchbpk,  bikevalue.length);
+        return bikevalue;
 
 
 
@@ -506,12 +507,13 @@ module.exports = {
             var returnValue = '';
             switch(result){
                 case '': returnValue = ''; break;
-                case '01': returnValue = '중대법규위반이력 존재'; break;
+                case '01': returnValue = '법규위반이력 존재'; break;
                 case '02': returnValue = '가입경력조건 미충족'; break;
                 case '03': returnValue = '책임보험 가입이력 미존재'; break;
                 case '04': returnValue = '가입가능연령 조건 미충족'; break;
                 case '05': returnValue = '사고횟수기준 초과'; break;
-                case '99': returnValue = '기타'; break;
+                case '06': returnValue = '본인소유 확인필요'; break;
+                case '99': returnValue = '기타 / 정보제공동의미확인'; break;
             }
 
             return returnValue
