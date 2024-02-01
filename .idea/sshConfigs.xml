@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SshConfigs">
+    <configs>
+      <sshConfig authType="PASSWORD" host="218.236.58.143" id="7bb73b91-81c3-43eb-8335-767d681eed73" port="30041" customName="HYUNDAI_IDC_TEST" nameFormat="CUSTOM" username="simg" useOpenSSHConfig="true">
+        <option name="customName" value="HYUNDAI_IDC_TEST" />
+      </sshConfig>
+    </configs>
+  </component>
+</project>

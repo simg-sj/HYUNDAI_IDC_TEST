@@ -40,7 +40,7 @@ cron.schedule('20 * * * * *', () => {
 });
 
 
-
+underwriteRequest();
 
 
 
@@ -89,6 +89,7 @@ function underwriteRequest(){
         // console.log('MYSQL RESULT : ', result[0]);
         let data = result[0];
         let valueRow = data;
+        console.log('batch count : ',data.length);
 
         /** 비동기 처리 ***/
         const timer = ms => new Promise(res=>setTimeout(res,ms))
@@ -97,7 +98,7 @@ function underwriteRequest(){
             let obj;
             for(var i=0; i< valueRow.length; i++){
                 obj = valueRow[i];
-                console.log(obj);
+                // console.log(obj);
                 sendData(obj);
                 await timer(1000);
             }
@@ -115,7 +116,7 @@ function sendData(obj){
 
 
 
-
+    // 전송 전문~ Object 정의
     let underwriteObj = {
         "bizCode":"004",
         "resDrvrID": "",
@@ -129,7 +130,7 @@ function sendData(obj){
         "resDrvgAutoTyp": "1",
         "resOwcrInsdChcYn": "",
         "resAutoOwrSameYn": "",
-        "resDrvrOwrRl": "",
+        "resDrvrOwrRl": "", // 지정1인 관계 코드 추가 [ 2024-01 ] by ICT - 오정현
         "resAutoOwrNm": "",
         "resAutoOwrMpNo": "",
         "resAutoOwrResdNo": "",
@@ -156,7 +157,12 @@ function sendData(obj){
     underwriteObj.resDrvrNm = obj.dName;
     underwriteObj.resDrvrMpNo = obj.cell;
     underwriteObj.resDrvrResdNo = ""; // 빈값으로 전달할것
-    underwriteObj.resInsdplnAgrmDt = _dateUtil.GET_DATE("YYYYMMDDHHMMSS", "NONE",0);
+    // underwriteObj.resInsdplnAgrmDt = _dateUtil.GET_DATE("YYYYMMDDHHMMSS", "NONE",0);
+
+    underwriteObj.resInsdplnAgrmDt = ""; // [ 2022.12.06 빈값으로 들어가야 설계동의요청시에 문제안생김 ]
+
+
+
     underwriteObj.resAutoNo = obj.dCarNum;
     underwriteObj.resAutoOwrResdNo = obj.socialNo;
     underwriteObj.resDataTrDt = _dateUtil.GET_DATE("YYMMDD", "NONE",0);
@@ -166,11 +172,44 @@ function sendData(obj){
     // underwriteObj.resInsdCo = String(bpk).padStart(3,'0');
     underwriteObj.resCoprCat = String(bpk).padStart(3,'0');
     underwriteObj.resProdCd = "5802";
+    if(obj.bdSoyuja === 'bonin'){ // 본인인경우
+        underwriteObj.resDrvrOwrRl = ""; // 본인인경우 공백
+    }else{  //본인이 아닌경우 [ 지정 1인 인 경우 ]
+        underwriteObj.resDrvrOwrRl = obj.relation;  // resDrvrOwrRl 을 관계코드로 활용 [ 2024-01 ]
+    }
 
-
-
+    // console.log('underwriteObjRength : ', underwriteObj.length)
+    console.log('underwriteObj : ', underwriteObj); // 전송전문 확인
+    // return;
     network_api.network_h001(underwriteObj).then(function(result){
         console.log('현대 응답값', result);
+
+
+        // 심사 오류 및 예외처리(슬랙푸시)
+        if(result.code != 200){
+            let resultMessage = result.receive.Fault.message;
+
+            let msg = ''
+            msg += '[심사오류 알림]' + '\n'
+            msg += ` • 오류자 : 배민 ${obj.bdpk} | ${obj.dName}` + '\n'
+            msg += ` • 결과코드 : ${result.code}` + '\n'
+            msg += ` • 결과메세지 : ${resultMessage}` + '\n'
+
+            let data = {
+                "channel": "#개발팀",
+                "username": "현대해상 시간제 보험",
+                "text": msg,
+                "icon_emoji": ":ghost:"
+            };
+
+            network_api.slackWebHook(data).then(function(result){
+                console.log(result);
+            })
+
+            return
+        }
+
+
 
         let res_data = {
             reqCoprCat:underwriteObj.resCoprCat,
@@ -180,7 +219,8 @@ function sendData(obj){
             reqUnwrRsltDet:result.receive.reqUnwrRsltDet,
             reqUnwrCpltDt:result.receive.reqUnwrCpltDt,
             reqUnwrValidDt:result.receive.reqUnwrValidDt,
-            reqAutoInagAgmtEdDt:result.receive.reqAutoInagAgmtEdDt
+            reqAutoInagAgmtEdDt:result.receive.reqAutoInagAgmtEdDt,
+            reqErrTypCd:result.receive.reqErrTypCd,
         }
 
         console.log(res_data)

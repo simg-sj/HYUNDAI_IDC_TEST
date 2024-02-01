@@ -28,10 +28,10 @@ var services = new serviceList();
 var svs = services[deployConfig.deploy];
 // var banList = [ 2,6,8 ]; // 작동금지 업체
 // var banList = [ ]; // 작동금지 업체
-var banList = [ 1,2,4,5,6,7,8,9 ]; // 작동금지 업체
+var banList = [ 2,3,4,5,6,7,8,9 ]; // 작동금지 업체
 
 
-start();
+// start();
 var day = _dateUtil.GET_DATE("YYMMDD", "DAY",0);
 console.log(day);
 
@@ -40,11 +40,13 @@ cron.schedule('50 30 00 * * *', () => {
     start();
 });
 
-
+start();
 async function start(){
     // var BUSINESSDAY =  _dateUtil.GET_DATE("YYMMDD", "NONE",0);
     var BUSINESSDAY = _dateUtil.GET_DATE("YYMMDD", "DAY",0);
     var resultText ="";
+
+    console.log("DAEMON BUSINESSDAY : ", BUSINESSDAY)
 
     /** 순차실행을 이용하여 진행 **/
     for (const service of svs) {
@@ -77,7 +79,7 @@ function RENEW_REQ(BUSINESSDAY, bpk, type, schema, key, iv){
 
     if(type=='BIKE'){
         // query = "CALL bike000012('RENEWBATCH','NEW','10000','"+BUSINESSDAY+"','"+bpk+"','_dpk','_dName','_result','_resultDetail','_dambo','_recvDay','_validDay','_mangi','_recvCode','_recvDetailCode','_recvFromDay','_recvValidDay','_recvToDay')";
-        query = "call bikeRenewal('R004','"+bpk+"','dpk','bdpk','dName','dCell','dJumin','dCarNum','dDambo','dMangi','dSoyuja','soyujaName','soyujaCell','soyujaJumin','carType','relation','pi1','pi2','startDay','endDay','primarykey');";
+        query = "call bikeRenewal_Bulk('R004','"+bpk+"','dpk','bdpk','dName','dCell','dJumin','dCarNum','dDambo','dMangi','dSoyuja','soyujaName','soyujaCell','soyujaJumin','carType','relation','pi1','pi2','startDay','endDay','primarykey');";
     }
     console.log(query);
     return new Promise(function (resolve, reject) {
@@ -88,7 +90,7 @@ function RENEW_REQ(BUSINESSDAY, bpk, type, schema, key, iv){
 
             console.log('MYSQL RESULT : ',bpk, type, schema, resultLength);
             console.log(key,iv);
-
+            console.log("result : ", result);
             if (resultLength > 0) {
                 resultText = underwriteService.UNDERWRITE(result, key, iv, bpk,BUSINESSDAY, type);
             }

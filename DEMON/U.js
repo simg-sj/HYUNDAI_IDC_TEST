@@ -138,7 +138,7 @@ function sendData(obj, bpk){
 
 
 
-
+    // 전문 Object
     let underwriteObj = {
         "bizCode":"004",
         "resDrvrID": "",
@@ -171,7 +171,8 @@ function sendData(obj, bpk){
         "resInsdCo": "",
         "resProdCd": "",
         "resCoprCat": "",
-        "resTwhvcUsedUsage": ""
+        "resTwhvcUsedUsage": "",
+        "resDsgn1ManOwCd" : "", // 지정1인 관계 코드 추가 [ 2024-01 ] by ICT - 오정현
     };
 
 
@@ -179,7 +180,9 @@ function sendData(obj, bpk){
     underwriteObj.resDrvrNm = obj.dName;
     underwriteObj.resDrvrMpNo = obj.cell;
     underwriteObj.resDrvrResdNo = ""; // 빈값으로 전달할것
-    underwriteObj.resInsdplnAgrmDt = _dateUtil.GET_DATE("YYYYMMDDHHMMSS", "NONE",0);
+    // underwriteObj.resInsdplnAgrmDt = _dateUtil.GET_DATE("YYYYMMDDHHMMSS", "NONE",0);
+    underwriteObj.resInsdplnAgrmDt = ""; // [ 2022.12.06 빈값으로 들어가야 설계동의요청시에 문제안생김 ]
+
     underwriteObj.resAutoNo = obj.dCarNum;
     underwriteObj.resAutoOwrResdNo = obj.socialNo;
     underwriteObj.resDataTrDt = _dateUtil.GET_DATE("YYMMDD", "NONE",0);
@@ -191,6 +194,8 @@ function sendData(obj, bpk){
     underwriteObj.resProdCd = "5802";
 
 
+    console.log('underwriteObj CHECK : ',underwriteObj); // 전문내용 생성
+    return;
 
     network_api.network_h001(underwriteObj).then(function(result){
         console.log('현대 응답값', result);
@@ -201,7 +206,7 @@ function sendData(obj, bpk){
             let resultMessage = result.receive.Fault.message;
 
             let msg = ''
-            msg += '테스트서버[심사오류 알림]' + '\n'
+            msg += '[심사오류 알림]' + '\n'
             msg += ` • 오류자 : service.serviceName ${obj.bdpk} | ${obj.dName}` + '\n'
             msg += ` • 결과코드 : ${result.code}` + '\n'
             msg += ` • 결과메세지 : ${resultMessage}` + '\n'
@@ -212,10 +217,12 @@ function sendData(obj, bpk){
                 "text": msg,
                 "icon_emoji": ":ghost:"
             };
-
+            // 테스트계요청은 슬랙 처리 x
+            /*
             network_api.slackWebHook(data).then(function(result){
                 console.log(result);
             })
+             */
 
             return
         }
