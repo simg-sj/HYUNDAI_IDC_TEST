@@ -35,23 +35,24 @@ svs.forEach(function(e){
 
 
 // underwriteRequest();
-cron.schedule('20 * * * * *', () => {
-    underwriteRequest();
-});
+// cron.schedule('20 * * * * *', () => {
+//     underwriteRequest();
+// });
 
 
-underwriteRequest();
+cancelSignRequest();
 
 
 
 
 
-function underwriteRequest(){
+function cancelSignRequest(){
 
     let job = 'BATCH';
     let regiGbn = 'NEW';
     let limitCount = '100000';
     let fileDay = _dateUtil.GET_DATE("YYMMDD", "NONE",0);
+    console.log("fileDay : ", fileDay);
     // let bpk = bpk;
     let dpk = '';
     let dName = '';
@@ -62,25 +63,22 @@ function underwriteRequest(){
     let validDay = '';
     let mangi = '';
 
-    let query = "CALL bike000012(" +
+    let query = "CALL bike000078(" +
         "'" + job + "'" +
-        ", '" + regiGbn + "'" +
         ", '" + limitCount + "'" +
         ", '" + fileDay + "'" +
         ", '" + bpk + "'" +
         ", '" + dpk + "'" +
-        ", '" + dName + "'" +
-        ", '" + result + "'" +
-        ", '" + resultDetail + "'" +
-        ", '" + dambo + "'" +
-        ", '" + recvDay + "'" +
-        ", '" + validDay + "'" +
-        ", '" + mangi + "'" +
-        ", '" + '_recvCode' + "'" +
-        ", '" + '_recvDetailCode' + "'" +
-        ", '" + '_recvFromDay' + "'" +
-        ", '" + '_recvToDay' + "'" +
-        ", '" + '_recvValidDay' + "'" +
+        ", '" + '_policyNumber' + "'" +
+        ", '" + '_dDambo' + "'" +
+        ", '" + '_dSocialNo' + "'" +
+        ", '" + '_dCarNum' + "'" +
+        ", '" + '_resultCode' + "'" +
+        ", '" + '_resultMsg' + "'" +
+        ", '" + '_resultDambo' + "'" +
+        ", '" + '_resultSday' + "'" +
+        ", '" + '_resultEday' + "'" +
+        ", '" + '_resultValidDay' + "'" +
         ");";
 
 
@@ -111,12 +109,49 @@ function underwriteRequest(){
 
 function sendData(obj){
 
+    /*
+    * 심사신청시 정상 전문
+    * {
+          bizCode: '004',
+          resDrvrID: 'B100034594',
+          resDrvrNm: '박대길',
+          resDrvrMpNo: '01057688525',
+          resDrvrResdNo: '',
+          resInsdPlnAgrmYN: 'Y',
+          resInsdplnAgrmDt: '',
+          resInsdPlnAgrmMthd: '03',
+          resAutoNo: '경북포항자0026',
+          resDrvgAutoTyp: '1',
+          resOwcrInsdChcYn: '',
+          resAutoOwrSameYn: '',
+          resDrvrOwrRl: '00',
+          resAutoOwrNm: '',
+          resAutoOwrMpNo: '',
+          resAutoOwrResdNo: '9102091785510',
+          resAutoOwrInsPlnAgrmYn: '',
+          resAutoOwrInsdPlnAgrmDt: '',
+          resAutoOwrInsdPlnAgrmNo: '',
+          resAutoOwrInsdplnAgrmMthd: '',
+          resAutoNoModYn: 'N',
+          resPrevAutoNo: '',
+          resDataTrDt: '20240308',
+          resPerinj2InsdYn: '1',
+          resObiInsdYn: '1',
+          resOwcrInsdYn: '1',
+          resPlyNo: 'M2024206030600000',
+          resAgmtEdDt: '20240731',
+          resInsdCo: '',
+          resProdCd: '5802',
+          resCoprCat: '001',
+          resTwhvcUsedUsage: ''
+       }
+    *
+    * */
 
 
 
 
-
-    let underwriteObj = {
+    let cancelSignObj = {
         "bizCode":"004",
         "resDrvrID": "",
         "resDrvrNm": "",
@@ -149,39 +184,41 @@ function sendData(obj){
         "resProdCd": "",
         "resCoprCat": "",
         "resTwhvcUsedUsage": "",
-        "resTermYn": "" // 신규심사요청시에는 빈값 ~
+        "resTermYn": "1" // 신규심사요청시에는 빈값 ~/ 기명취소요청은 1
     };
 
 
-    underwriteObj.resDrvrID = obj.bdpk;
-    underwriteObj.resDrvrNm = obj.dName;
-    underwriteObj.resDrvrMpNo = obj.cell;
-    underwriteObj.resDrvrResdNo = ""; // 빈값으로 전달할것
+    cancelSignObj.resDrvrID = obj.bdpk;
+    cancelSignObj.resDrvrNm = obj.dName;
+    cancelSignObj.resDrvrMpNo = obj.cell;
+    cancelSignObj.resDrvrResdNo = ""; // 빈값으로 전달할것
     // underwriteObj.resInsdplnAgrmDt = _dateUtil.GET_DATE("YYYYMMDDHHMMSS", "NONE",0);
 
-    underwriteObj.resInsdplnAgrmDt = ""; // [ 2022.12.06 빈값으로 들어가야 설계동의요청시에 문제안생김 ]
+    cancelSignObj.resInsdplnAgrmDt = ""; // [ 2022.12.06 빈값으로 들어가야 설계동의요청시에 문제안생김 ]
 
 
 
-    underwriteObj.resAutoNo = obj.dCarNum;
-    underwriteObj.resAutoOwrResdNo = obj.socialNo;
-    underwriteObj.resDataTrDt = _dateUtil.GET_DATE("YYMMDD", "NONE",0);
-    underwriteObj.resAgmtEdDt = obj.reqPnoToDay; // 사전에 전달된 보험종기로만 전달해야함
+    cancelSignObj.resAutoNo = obj.dCarNum;
+    cancelSignObj.resAutoOwrResdNo = obj.socialNo;
+    cancelSignObj.resDataTrDt = _dateUtil.GET_DATE("YYMMDD", "NONE",0);
+    cancelSignObj.resAgmtEdDt = obj.reqPnoToDay; // 사전에 전달된 보험종기로만 전달해야함
 
-    underwriteObj.resDrvrOwrRl = obj.relation;  // resDrvrOwrRl 을 관계코드로 활용 [ 2024-01 ]
-    underwriteObj.resPlyNo = obj.reqPno;
-    // underwriteObj.resInsdCo = String(bpk).padStart(3,'0');
-    underwriteObj.resCoprCat = String(bpk).padStart(3,'0');
-    underwriteObj.resProdCd = "5802";
+    cancelSignObj.resDrvrOwrRl = obj.relation;  // resDrvrOwrRl 을 관계코드로 활용 [ 2024-01 ]
+    cancelSignObj.resPlyNo = obj.reqPno;
+    // cancelSignObj.resInsdCo = String(bpk).padStart(3,'0');
+    cancelSignObj.resCoprCat = String(bpk).padStart(3,'0');
+    cancelSignObj.resProdCd = "5802";
     if(obj.bdSoyuja === 'bonin'){ // 본인인경우
-        underwriteObj.resDrvrOwrRl = ""; // 본인인경우 공백
+        console.log('본인소유자')
+        cancelSignObj.resDrvrOwrRl = ""; // 본인인경우 공백
     }else{  //본인이 아닌경우 [ 지정 1인 인 경우 ]
-        underwriteObj.resDrvrOwrRl = obj.relation;  // resDrvrOwrRl 을 관계코드로 활용 [ 2024-01 ]
+        console.log('타인소유자')
+        cancelSignObj.resDrvrOwrRl = obj.relation;  // resDrvrOwrRl 을 관계코드로 활용 [ 2024-01 ]
     }
 
-    // console.log('underwriteObj : ', underwriteObj); // 전송전문 확인
-
-    network_api.network_h001(underwriteObj).then(function(result){
+    console.log('cancelSignObj : ', cancelSignObj); // 전송전문 확인
+    return;
+    network_api.network_h001(cancelSignObj).then(function(result){
         console.log('현대 응답값', result);
 
 
