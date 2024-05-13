@@ -17,9 +17,9 @@ const bpk = 1; // 딜버 전용
 /**
  *
  *
- * 기명 취소
+ * 심사 리스트 전송 하기
  *
- * 현대는 실시간 이지만 기명취소 취소를 할수있기 떄문에 하루 한번 20시 50분 50초에 실행
+ * 매분의 20초에 한번씩 실행
  *
  *
  *
@@ -35,8 +35,8 @@ svs.forEach(function(e){
 
 
 // underwriteRequest();
-// cron.schedule('50 50 20 * * *', () => {
-//     cancelSignRequest();
+// cron.schedule('20 * * * * *', () => {
+//     underwriteRequest();
 // });
 
 
@@ -49,16 +49,26 @@ cancelSignRequest();
 function cancelSignRequest(){
 
     let job = 'BATCH';
+    let regiGbn = 'NEW';
     let limitCount = '100000';
     let fileDay = _dateUtil.GET_DATE("YYMMDD", "NONE",0);
-
+    console.log("fileDay : ", fileDay);
+    // let bpk = bpk;
+    let dpk = '';
+    let dName = '';
+    let result = '';
+    let resultDetail = '';
+    let dambo = '';
+    let recvDay = '';
+    let validDay = '';
+    let mangi = '';
 
     let query = "CALL bike000078(" +
         "'" + job + "'" +
         ", '" + limitCount + "'" +
         ", '" + fileDay + "'" +
         ", '" + bpk + "'" +
-        ", '" + '_dpk' + "'" +
+        ", '" + dpk + "'" +
         ", '" + '_policyNumber' + "'" +
         ", '" + '_dDambo' + "'" +
         ", '" + '_dSocialNo' + "'" +
@@ -72,6 +82,7 @@ function cancelSignRequest(){
         ");";
 
 
+    console.log(query);
     _mysqlUtil.mysql_proc_exec(query, schema).then(function(result){
         // console.log('MYSQL RESULT : ', result[0]);
         let data = result[0];
@@ -99,9 +110,46 @@ function cancelSignRequest(){
 function sendData(obj){
 
     /*
-    * 기명취소 정상 전문
+    * 심사신청시 정상 전문
+    * {
+          bizCode: '004',
+          resDrvrID: 'B100034594',
+          resDrvrNm: '박대길',
+          resDrvrMpNo: '01057688525',
+          resDrvrResdNo: '',
+          resInsdPlnAgrmYN: 'Y',
+          resInsdplnAgrmDt: '',
+          resInsdPlnAgrmMthd: '03',
+          resAutoNo: '경북포항자0026',
+          resDrvgAutoTyp: '1',
+          resOwcrInsdChcYn: '',
+          resAutoOwrSameYn: '',
+          resDrvrOwrRl: '00',
+          resAutoOwrNm: '',
+          resAutoOwrMpNo: '',
+          resAutoOwrResdNo: '9102091785510',
+          resAutoOwrInsPlnAgrmYn: '',
+          resAutoOwrInsdPlnAgrmDt: '',
+          resAutoOwrInsdPlnAgrmNo: '',
+          resAutoOwrInsdplnAgrmMthd: '',
+          resAutoNoModYn: 'N',
+          resPrevAutoNo: '',
+          resDataTrDt: '20240308',
+          resPerinj2InsdYn: '1',
+          resObiInsdYn: '1',
+          resOwcrInsdYn: '1',
+          resPlyNo: 'M2024206030600000',
+          resAgmtEdDt: '20240731',
+          resInsdCo: '',
+          resProdCd: '5802',
+          resCoprCat: '001',
+          resTwhvcUsedUsage: ''
+       }
     *
-    */
+    * */
+
+
+
 
     let cancelSignObj = {
         "bizCode":"004",
@@ -169,6 +217,63 @@ function sendData(obj){
     }
 
     console.log('cancelSignObj : ', cancelSignObj); // 전송전문 확인
+    return;
+    network_api.network_h001(cancelSignObj).then(function(result){
+        console.log('현대 응답값', result);
+
+
+        // 심사 오류 및 예외처리(슬랙푸시)
+        if(result.code != 200){
+            let resultMessage = result.receive.Fault.message;
+
+            // let msg = ''
+            // msg += '[심사오류 알림]' + '\n'
+            // msg += ` • 오류자 : 배민 ${obj.bdpk} | ${obj.dName}` + '\n'
+            // msg += ` • 결과코드 : ${result.code}` + '\n'
+            // msg += ` • 결과메세지 : ${resultMessage}` + '\n'
+            //
+            // let data = {
+            //     "channel": "#ict팀",
+            //     "username": "현대해상 시간제 보험",
+            //     "text": msg,
+            //     "icon_emoji": ":ghost:"
+            // };
+            //
+            // network_api.simg_slackWebHook(data).then(function(result){
+            //     console.log(result);
+            // })
+            //
+            // return
+        }
+
+
+
+        let res_data = {
+            reqCoprCat:underwriteObj.resCoprCat,
+            reqDrvrID:result.receive.reqDrvrID,
+            reqDrvrNm:result.receive.reqDrvrNm,
+            reqUnwrRslt:result.receive.reqUnwrRslt,
+            reqUnwrRsltDet:result.receive.reqUnwrRsltDet,
+            reqUnwrCpltDt:result.receive.reqUnwrCpltDt,
+            reqUnwrValidDt:result.receive.reqUnwrValidDt,
+            reqAutoInagAgmtEdDt:result.receive.reqAutoInagAgmtEdDt,
+            reqErrTypCd:result.receive.reqErrTypCd,
+        }
+
+        console.log(res_data)
+
+
+
+        underwriteRoute.UNDERWRITERESULT(res_data).then(function(result){
+            console.log("심사결과 반영", result);
+
+        })
+
+
+    });
+
+
+
 
 }
 
