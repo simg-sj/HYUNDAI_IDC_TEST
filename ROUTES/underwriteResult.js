@@ -26,7 +26,8 @@ module.exports = {
      *      "reqCoprCat":"001",                           -- 업체코드 [ bpk ]
      *      "reqTwhvcUsedUsage":" ",
      *      "reqPlyNo":"M2023L90995300000",               -- 증권번호
-     *      "reqErrTypCd":null                            -- 유효성검사시 에러코드
+     *      "reqErrTypCd":null,                            -- 유효성검사시 에러코드
+     *      "resInagId": ""                               -- 체결이행동의 고유키값 [ 2024-08-30 오픈 예정 ]
      * }
      *
      */
@@ -69,6 +70,7 @@ module.exports = {
             let recvFromDay = request_data.reqUnwrCpltDt;
             let recvToDay = request_data.reqUnwrValidDt;
             let recvValidDay = request_data.reqAutoInagAgmtEdDt;
+            let recvContractKey = request_data.resInagId; // 추가
 
 
             svs.forEach(function(e){
@@ -98,6 +100,7 @@ module.exports = {
                 ", '" + recvFromDay + "'" +
                 ", '" + recvToDay + "'" +
                 ", '" + recvValidDay + "'" +
+                ", '" + recvContractKey + "'" +
                 ");";
 
 

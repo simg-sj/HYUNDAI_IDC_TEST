@@ -23,11 +23,11 @@ var services = new serviceList();
 var svs = services[deployConfig.deploy];
 
 console.log('deploy 모드 : ', deployConfig.deploy)
-var banList = [1, 6]; // 작동금지 업체
+var banList = [1,5,3, 6]; // 작동금지 업체
 
 
 
-// start();
+start();
 cron.schedule('20 * * * * *', () => {
     start();
 });

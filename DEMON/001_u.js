@@ -35,9 +35,9 @@ svs.forEach(function(e){
 
 
 // underwriteRequest();
-cron.schedule('20 * * * * *', () => {
-    underwriteRequest();
-});
+// cron.schedule('20 * * * * *', () => {
+//     underwriteRequest();
+// });
 
 
 underwriteRequest();
@@ -81,6 +81,7 @@ function underwriteRequest(){
         ", '" + '_recvFromDay' + "'" +
         ", '" + '_recvToDay' + "'" +
         ", '" + '_recvValidDay' + "'" +
+        ", '" + '_recvContractKey' + "'" +
         ");";
 
 
@@ -148,8 +149,7 @@ function sendData(obj){
         "resInsdCo": "",
         "resProdCd": "",
         "resCoprCat": "",
-        "resTwhvcUsedUsage": "",
-        "resTermYn": "" // 신규심사요청시에는 빈값 ~
+        "resTwhvcUsedUsage": ""
     };
 
 
@@ -185,42 +185,43 @@ function sendData(obj){
         console.log('현대 응답값', result);
 
 
-        // 심사 오류 및 예외처리(슬랙푸시)
-        if(result.code != 200){
-            let resultMessage = result.receive.Fault.message;
-
-            // let msg = ''
-            // msg += '[심사오류 알림]' + '\n'
-            // msg += ` • 오류자 : 배민 ${obj.bdpk} | ${obj.dName}` + '\n'
-            // msg += ` • 결과코드 : ${result.code}` + '\n'
-            // msg += ` • 결과메세지 : ${resultMessage}` + '\n'
-            //
-            // let data = {
-            //     "channel": "#ict팀",
-            //     "username": "현대해상 시간제 보험",
-            //     "text": msg,
-            //     "icon_emoji": ":ghost:"
-            // };
-            //
-            // network_api.simg_slackWebHook(data).then(function(result){
-            //     console.log(result);
-            // })
-            //
-            // return
-        }
+        // 심사 오류 및 예외처리(슬랙푸시) /* 테스트계는 막아둠 */
+        // if(result.code != 200){
+        //     let resultMessage = result.receive.Fault.message;
+        //
+        //     let msg = ''
+        //     msg += '[심사오류 알림]' + '\n'
+        //     msg += ` • 오류자 : 배민 ${obj.bdpk} | ${obj.dName}` + '\n'
+        //     msg += ` • 결과코드 : ${result.code}` + '\n'
+        //     msg += ` • 결과메세지 : ${resultMessage}` + '\n'
+        //
+        //     let data = {
+        //         "channel": "#ict팀",
+        //         "username": "현대해상 시간제 보험",
+        //         "text": msg,
+        //         "icon_emoji": ":ghost:"
+        //     };
+        //
+        //     network_api.simg_slackWebHook(data).then(function(result){
+        //         console.log(result);
+        //     })
+        //
+        //     return
+        // }
 
 
 
         let res_data = {
-            reqCoprCat:underwriteObj.resCoprCat,
-            reqDrvrID:result.receive.reqDrvrID,
-            reqDrvrNm:result.receive.reqDrvrNm,
-            reqUnwrRslt:result.receive.reqUnwrRslt,
-            reqUnwrRsltDet:result.receive.reqUnwrRsltDet,
-            reqUnwrCpltDt:result.receive.reqUnwrCpltDt,
-            reqUnwrValidDt:result.receive.reqUnwrValidDt,
-            reqAutoInagAgmtEdDt:result.receive.reqAutoInagAgmtEdDt,
-            reqErrTypCd:result.receive.reqErrTypCd,
+            reqCoprCat:underwriteObj.resCoprCat, // 업체 구분값
+            reqDrvrID:result.receive.reqDrvrID, // 기사키 [ SIMG 발급 ]
+            reqDrvrNm:result.receive.reqDrvrNm, // 기사이름
+            reqUnwrRslt:result.receive.reqUnwrRslt, // 심사결과
+            reqUnwrRsltDet:result.receive.reqUnwrRsltDet, // 심사결과 상세(세부)
+            reqUnwrCpltDt:result.receive.reqUnwrCpltDt, // 증권가입유형
+            reqUnwrValidDt:result.receive.reqUnwrValidDt, // 심사유효기한
+            reqAutoInagAgmtEdDt:result.receive.reqAutoInagAgmtEdDt, // 자동차보험 종기
+            reqErrTypCd:result.receive.reqErrTypCd, // 에러코드 [ 01 - 주민번호없는경우, 02 - 차량번호 없는 경우, 03 - 계약번호(증권번호) 없는 경우, 04 - 주민번호 체계 오류 ]
+            resInagId:result.receive.resInagId // 체결이행동의 고유값 [ 2024-08-30 오픈 예정 ]
         }
 
         console.log(res_data)

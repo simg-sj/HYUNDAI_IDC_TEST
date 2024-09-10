@@ -109,22 +109,54 @@ module.exports = {
                             console.log(result);
 
 
+                            let drivingId = "";
+                            let locationDateTime = "";
+                            let investTime = "";
+                            let lat = "";
+                            let lng = "";
+                            let pickup = "";
+                            let delievery = "";
+
+                            drivingId = result.receive.drivingId;
+                            locationDateTime = result.receive.locationRecordDateTime;
+                            investTime =result.receive.investigateDateTime;
+                            lat = result.receive.lat;
+                            lng = result.receive.lng;
+                            lat = String(lat).padEnd(10,"0");
+                            lng = String(lng).padEnd(10,"0");
+
+
+                            if(!result.receive.deliveries[0].pickupAddress){
+                                pickup = "";
+                            }else{
+                                pickup = result.receive.deliveries[0].pickupAddress;
+                            }
+
+                            if(!result.receive.deliveries[0].deliveryAddress){
+                                delievery = "";
+                            }else{
+                                delievery = result.receive.deliveries[0].deliveryAddress;
+                            }
+
+
+
+
                             let query = "CALL accidentGps(" +
                                 "'" + "SAVE" + "'" +
                                 ", '" + "0" + "'" +
                                 ", '" + "" + "'" +
-                                ", '" + result.receive.drivingId + "'" +
+                                ", '" + drivingId + "'" +
                                 ", '" + "" + "'" +
                                 ", '" + "" + "'" +
                                 ", '" + "" + "'" +
-                                ", '" + result.receive.locationRecordDateTime + "'" +
-                                ", '" + result.receive.investigateDateTime + "'" +
-                                ", '" + result.receive.lat + "'" +
-                                ", '" + result.receive.lng + "'" +
+                                ", '" + locationDateTime + "'" +
+                                ", '" + investTime + "'" +
+                                ", '" + lat + "'" +
+                                ", '" + lng + "'" +
                                 ", '" + "SEARCH FINISH" + "'" +
                                 ", '" + "0" + "'" +
-                                ", '" + result.receive.deliveries[0].pickupAddress + "'" +
-                                ", '" + result.receive.deliveries[0].deliveryAddress + "'" +
+                                ", '" + pickup + "'" +
+                                ", '" + delievery + "'" +
                                 ", '" + "" + "'" +
                                 ", '" + "" + "'" +
                                 ", '" + "" + "'" +
@@ -146,18 +178,18 @@ module.exports = {
                                 "resDrvgStDtm":startedTime,
                                 "resDrvgEdDtm":finishedTime,
                                 "resDrvgCancYn":"0",
-                                "resPosInfoInvstDtm":    _util.isoTimeConvert( result.receive.investigateDateTime),
-                                "resPosInfoRecDtm":_util.isoTimeConvert( result.receive.locationRecordDateTime) ,
-                                "resLatd":result.receive.lat,
-                                "resLgtd":result.receive.lng,
-                                "resDlvStAddr":result.receive.deliveries[0].pickupAddress,
-                                "resDlvEdAddr":result.receive.deliveries[0].deliveryAddress
+                                "resPosInfoInvstDtm":    _util.isoTimeConvert(investTime),
+                                "resPosInfoRecDtm":_util.isoTimeConvert(locationDateTime),
+                                "resLatd":lat,
+                                "resLgtd":lng,
+                                "resDlvStAddr":pickup,
+                                "resDlvEdAddr":delievery
                             };
 
                             // res.json(success);
                             resolve(success)
                         }).catch(function(e){
-                            console.log('NO DRIVING ID MATCH');
+                            console.log('NO DRIVING ID MATCH', e);
                             let success = {
                                 "resDrvrID": request_data.reqDrvrID,
                                 "resDrvgID":request_data.reqDrvgID,
@@ -187,6 +219,9 @@ module.exports = {
                     console.log(result[0][0]);
                     var responseDate = result[0][0];
 
+
+                    let lat = String(responseDate.lat).padEnd(10,"0");
+                    let lng = String(responseDate.lng).padEnd(10,"0");
                     let success = {
                         "resDrvrID": responseDate.driverId,
                         "resDrvgID":request_data.reqDrvgID,
@@ -195,8 +230,8 @@ module.exports = {
                         "resDrvgCancYn":"0",
                         "resPosInfoInvstDtm":    _util.isoTimeConvert( responseDate.searchDateTime),
                         "resPosInfoRecDtm":_util.isoTimeConvert( responseDate.locationRecordDateTime) ,
-                        "resLatd":responseDate.lat,
-                        "resLgtd":responseDate.lng,
+                        "resLatd":lat,
+                        "resLgtd":lng,
                         "resDlvStAddr":responseDate.pickupPosition,
                         "resDlvEdAddr":responseDate.finishPosition
                     };
@@ -312,7 +347,7 @@ module.exports = {
 
 
 
-         console.log(query);
+        console.log(query);
 
         return new Promise(function (resolve, reject) {
 
@@ -344,7 +379,7 @@ module.exports = {
                             "investigateDateTime": accidentDate,
                         };
 
-                     console.log('요청 정보 : ', sendData);
+                    console.log('요청 정보 : ', sendData);
 
 
 
@@ -414,19 +449,19 @@ module.exports = {
                     console.log(result[0][0]);
                     var responseDate = result[0][0];
 
-                        let success = {
-                            "resDrvrID": responseDate.driverId,
-                            "resDrvgID":request_data.reqDrvgID,
-                            "resDrvgStDtm":responseDate.startedDateTime,
-                            "resDrvgEdDtm":responseDate.finishedDateTime,
-                            "resDrvgCancYn":"0",
-                            "resPosInfoInvstDtm":_baseUtil.isoTimeConvert(responseDate.searchDateTime),
-                            "resPosInfoRecDtm":_baseUtil.isoTimeConvert(responseDate.locationRecordDateTime),
-                            "resLatd":responseDate.lat,
-                            "resLgtd":responseDate.lng,
-                            "resDlvStAddr":responseDate.pickupPosition,
-                            "resDlvEdAddr":responseDate.finishPosition
-                        };
+                    let success = {
+                        "resDrvrID": responseDate.driverId,
+                        "resDrvgID":request_data.reqDrvgID,
+                        "resDrvgStDtm":responseDate.startedDateTime,
+                        "resDrvgEdDtm":responseDate.finishedDateTime,
+                        "resDrvgCancYn":"0",
+                        "resPosInfoInvstDtm":_baseUtil.isoTimeConvert(responseDate.searchDateTime),
+                        "resPosInfoRecDtm":_baseUtil.isoTimeConvert(responseDate.locationRecordDateTime),
+                        "resLatd":responseDate.lat,
+                        "resLgtd":responseDate.lng,
+                        "resDlvStAddr":responseDate.pickupPosition,
+                        "resDlvEdAddr":responseDate.finishPosition
+                    };
 
                     // res.json(success);
                     resolve(success)
@@ -674,9 +709,9 @@ module.exports = {
 
     },
     PLATFORM: function(request_data, schema, bpk) {
-        console.log("PLATFORM ACCIDENT REQUEST", request_data);
-        console.log(schema);
-        console.log(bpk);
+        console.log("PLATFORM ACCIDENT REQUEST - data :: ", request_data);
+        console.log("PLATFORM ACCIDENT REQUEST - schema :: ", schema);
+        console.log("PLATFORM ACCIDENT REQUEST - bpk :: ", bpk);
 
 
         let job = "SEARCH";
@@ -764,11 +799,70 @@ module.exports = {
                     if(gubun=='BIKE'){
                         _apiUtil.getPlatformBikeGps(sendData, bpk).then(function(result){
 
-                            console.log(result);
+                            console.log('accident result 1 : ', result);
 
+                            let query = ""
 
+                            if (bpk == '11'){
+                                console.log('운행아이디 : ',result.receive[0].drivingId);
+                                console.log('운행 기록 시간 : ',result.receive[0].locationRecordDateTime);
+                                console.log('사고 발생 시간 : ',result.receive[0].investigateDateTime);
+                                console.log('위도 : ',result.receive[0].lat);
+                                console.log('경도 : ',result.receive[0].lng);
+                                console.log('픽업지 ~ : ', result.receive[0].deliveries[0].pickupAddress)
+                                console.log('목적지 ~ : ', result.receive[0].deliveries[0].deliveryAddress);
 
-                            let query = "CALL accidentGps(" +
+                                query = "CALL accidentGps(" +
+                                    "'" + "SAVE" + "'" +
+                                    ", '" + "0" + "'" +
+                                    ", '" + "" + "'" +
+                                    ", '" + result.receive[0].drivingId + "'" +
+                                    ", '" + "" + "'" +
+                                    ", '" + "" + "'" +
+                                    ", '" + "" + "'" +
+                                    ", '" + result.receive[0].locationRecordDateTime + "'" +
+                                    ", '" + result.receive[0].investigateDateTime + "'" +
+                                    ", '" + result.receive[0].lat + "'" +
+                                    ", '" + result.receive[0].lng + "'" +
+                                    ", '" + "SEARCH FINISH" + "'" +
+                                    ", '" + "0" + "'" +
+                                    ", '" + result.receive[0].deliveries[0].pickupAddress + "'" +
+                                    ", '" + result.receive[0].deliveries[0].deliveryAddress + "'" +
+                                    ", '" + "" + "'" +
+                                    ", '" + "" + "'" +
+                                    ", '" + "" + "'" +
+                                    ");";
+
+                                console.log(query);
+
+                                _mysqlUtil.mysql_proc_exec(query, schema);
+
+                                let success = {
+                                    "resDrvrID": apiDriverId,
+                                    "resDrvgID":request_data.reqDrvgID,
+                                    "resDrvgStDtm":startedTime,
+                                    "resDrvgEdDtm":finishedTime,
+                                    "resDrvgCancYn":"0",
+                                    "resPosInfoInvstDtm":result.receive[0].investigateDateTime,
+                                    "resPosInfoRecDtm":result.receive[0].locationRecordDateTime,
+                                    "resLatd":result.receive[0].lat,
+                                    "resLgtd":result.receive[0].lng,
+                                    "resDlvStAddr":result.receive[0].deliveries[0].pickupAddress,
+                                    "resDlvEdAddr":result.receive[0].deliveries[0].deliveryAddress
+                                };
+
+                                // res.json(success);
+                                resolve(success)
+                            }else{
+                                console.log('운행아이디 : ',result.receive[0].drivingId);
+                                console.log('운행 기록 시간 : ',result.receive[0].locationRecordDateTime);
+                                console.log('사고 발생 시간 : ',result.receive[0].investigateDateTime);
+                                console.log('위도 : ',result.receive[0].lat);
+                                console.log('경도 : ',result.receive[0].lng);
+                                console.log('픽업지 ~ : ', result.receive[0].deliveries[0].pickupAddress)
+                                console.log('목적지 ~ : ', result.receive[0].deliveries[0].deliveryAddress);
+
+                                query = "CALL accidentGps(" +
                                 "'" + "SAVE" + "'" +
                                 ", '" + "0" + "'" +
                                 ", '" + "" + "'" +
@@ -789,31 +883,27 @@ module.exports = {
                                 ", '" + "" + "'" +
                                 ");";
 
+                                console.log(query);
 
-                            console.log(query);
+                                _mysqlUtil.mysql_proc_exec(query, schema);
 
-                            _mysqlUtil.mysql_proc_exec(query, schema);
+                                let success = {
+                                    "resDrvrID": apiDriverId,
+                                    "resDrvgID":request_data.reqDrvgID,
+                                    "resDrvgStDtm":startedTime,
+                                    "resDrvgEdDtm":finishedTime,
+                                    "resDrvgCancYn":"0",
+                                    "resPosInfoInvstDtm":result.receive.investigateDateTime,
+                                    "resPosInfoRecDtm":result.receive.locationRecordDateTime,
+                                    "resLatd":result.receive.lat,
+                                    "resLgtd":result.receive.lng,
+                                    "resDlvStAddr":result.receive.deliveries[0].pickupAddress,
+                                    "resDlvEdAddr":result.receive.deliveries[0].deliveryAddress
+                                };
+                            }
 
 
 
-
-
-                            let success = {
-                                "resDrvrID": apiDriverId,
-                                "resDrvgID":request_data.reqDrvgID,
-                                "resDrvgStDtm":startedTime,
-                                "resDrvgEdDtm":finishedTime,
-                                "resDrvgCancYn":"0",
-                                "resPosInfoInvstDtm":result.receive.investigateDateTime,
-                                "resPosInfoRecDtm":result.receive.locationRecordDateTime,
-                                "resLatd":result.receive.lat,
-                                "resLgtd":result.receive.lng,
-                                "resDlvStAddr":result.receive.deliveries[0].pickupAddress,
-                                "resDlvEdAddr":result.receive.deliveries[0].deliveryAddress
-                            };
-
-                            // res.json(success);
-                            resolve(success)
                         });
                     }
 
@@ -826,6 +916,9 @@ module.exports = {
 
                     console.log(result[0][0]);
                     var responseDate = result[0][0];
+                    // date 변환
+                    responseDate.locationRecordDateTime = _util.getTimeyymmddhhmmss('no');
+                    responseDate.searchDateTime = _util.getTimeyymmddhhmmss('no');
 
                     let success = {
                         "resDrvrID": responseDate.driverId,
@@ -840,6 +933,7 @@ module.exports = {
                         "resDlvStAddr":responseDate.pickupPosition,
                         "resDlvEdAddr":responseDate.finishPosition
                     };
+                    console.log('real response : ', success);
 
                     // res.json(success);
                     resolve(success)

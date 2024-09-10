@@ -156,14 +156,15 @@ function sendData(obj, TYPE, bpk, schema, bizInfo){
             cell:obj.cell,
             dName:obj.bdName,
             dCarNum:obj.bdCarNum,
-            infoMsg: "■ 유의사항\n" +
-                "- 운행 오토바이가 변경될 경우, 반드시 보험사에 통보해주세요. \n" +
-                "- 계약한 오토바이의 책임보험 용도 및 계약 내용 변경 시, 반드시 보험사에 통보해주세요.\n" +
-                "- 계약시 등록한 오토바이 및 보험 계약 내용과 상이할 경우 보상에 제한이 있을 수 있습니다.\n" +
-                "- 배달 중의 사고 발생 문의는 현대해상 사고접수번호로 접수해주세요. (1588-5656 )",
+            contractKey:obj,recvContractKey,
+            // infoMsg: "■ 유의사항\n" +
+            //     "- 운행 오토바이가 변경될 경우, 반드시 보험사에 통보해주세요. \n" +
+            //     "- 계약한 오토바이의 책임보험 용도 및 계약 내용 변경 시, 반드시 보험사에 통보해주세요.\n" +
+            //     "- 계약시 등록한 오토바이 및 보험 계약 내용과 상이할 경우 보상에 제한이 있을 수 있습니다.\n" +
+            //     "- 배달 중의 사고 발생 문의는 현대해상 사고접수번호로 접수해주세요. (1588-5656 )",
 
         };
-        msg = _kakaoMsg.bike005(data);
+        msg = _kakaoMsg.bike005_ver2(data);
     }
     if(TYPE =='REJECTED'){
         let data = {

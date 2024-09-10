@@ -32,44 +32,44 @@ svs.forEach(function(e){
 });
 
 
-sendMsg('ACCEPTED', '20240724'); // 수동 한번도 안보낸인원ㄴ
+sendMsg('ACCEPTED', '20240826'); // 수동 한번도 안보낸인원ㄴ
 // sendMsg('REJECTED', '20220529'); // 수동 한번도 안보낸인원ㄴ
 // sendMsg('EXPIRED', '20220529'); // 수동 한번도 안보낸인원ㄴ
 
 
 
 // 통과 안내 // BAEMIN EXCEPTION
-cron.schedule('*/30 * * * * *', () => {
-    let fileDay = _dateUtil.GET_DATE("YYMMDD", "DAY",0);
-
-    sendMsg('ACCEPTED', fileDay); // 수동 한번도 안보낸인원ㄴ
-});
-
-// 거절자 안내
-cron.schedule('*/30 * * * * *', () => {
-
-    let fileDay = _dateUtil.GET_DATE("YYMMDD", "DAY",0);
-
-
-    sendMsg('REJECTED', fileDay); // 수동 한번도 안보낸인원ㄴ
-});
-
-// 만료 안내
-cron.schedule('*/40 * * * * *', () => {
-
-    let fileDay = _dateUtil.GET_DATE("YYMMDD", "DAY",0);
-
-
-    sendMsg('EXPIRED', fileDay); // 수동 한번도 안보낸인원ㄴ
-});
-
-cron.schedule('*/50 * * * * *', () => {
-
-    let fileDay = _dateUtil.GET_DATE("YYMMDD", "DAY",0);
-
-
-    sendMsg('BIKESOU', fileDay);
-});
+// cron.schedule('*/30 * * * * *', () => {
+//     let fileDay = _dateUtil.GET_DATE("YYMMDD", "DAY",0);
+//
+//     sendMsg('ACCEPTED', fileDay); // 수동 한번도 안보낸인원ㄴ
+// });
+//
+// // 거절자 안내
+// cron.schedule('*/30 * * * * *', () => {
+//
+//     let fileDay = _dateUtil.GET_DATE("YYMMDD", "DAY",0);
+//
+//
+//     sendMsg('REJECTED', fileDay); // 수동 한번도 안보낸인원ㄴ
+// });
+//
+// // 만료 안내
+// cron.schedule('*/40 * * * * *', () => {
+//
+//     let fileDay = _dateUtil.GET_DATE("YYMMDD", "DAY",0);
+//
+//
+//     sendMsg('EXPIRED', fileDay); // 수동 한번도 안보낸인원ㄴ
+// });
+//
+// cron.schedule('*/50 * * * * *', () => {
+//
+//     let fileDay = _dateUtil.GET_DATE("YYMMDD", "DAY",0);
+//
+//
+//     sendMsg('BIKESOU', fileDay);
+// });
 // sendMsg('BIKESOU', '20240308');
 function sendMsg(TYPE, fileDay){
 
@@ -122,6 +122,7 @@ function sendData(obj, TYPE){
             cell:obj.cell,
             dName:obj.bdName,
             dCarNum:obj.bdCarNum,
+            contractKey:obj.recvContractKey,
             infoMsg: "■ 유의사항\n" +
                 "- 기존에 다른 수단, 보험을 이용 후 변경하는 경우, 카카오톡 채널(@배민커넥트)로 반드시 변경 신청해주세요.\n" +
                 "- 운행 오토바이, 계약내용, 책임보험 용도가 변경될 경우, 반드시 보험사에 통보해주세요. \n" +
@@ -130,7 +131,7 @@ function sendData(obj, TYPE){
                 "- 배달 수단 및 오토바이 개인유상보험으로 변경을 원하시는 경우, 카카오톡 채널(@배민커넥트)로 문의해주세요."
 
         };
-        msg = _kakaoMsg.baemin003_ver2(data);
+        msg = _kakaoMsg.baemin003_ver3(data);
     }
     if(TYPE =='REJECTED'){
         let data = {

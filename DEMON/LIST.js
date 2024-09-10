@@ -101,6 +101,7 @@ function underwriteList(bpk, schema){
         ", '" + '_recvDetailCode' + "'" +
         ", '" + '_recvFromDay' + "'" +
         ", '" + '_recvToDay' + "'" +
+        ", '" + '_recvToDay' + "'" +
         ", '" + '_recvValidDay' + "'" +
         ");";
 

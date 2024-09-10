@@ -32,10 +32,10 @@ svs.forEach(function(e){
 
 });
 
-// checkAgree();
-cron.schedule('10 45 23 * * *', () => {
-    checkAgree();
-});
+checkAgree();
+// cron.schedule('10 45 23 * * *', () => {
+//     checkAgree();
+// });
 
 
 
@@ -44,7 +44,9 @@ cron.schedule('10 45 23 * * *', () => {
 
 
 
-function checkAgree(){
+function checkAgree(underwriteDay){
+
+    underwriteDay = underwriteDay || 'all';
 
     let job = 'LIST';
 
@@ -52,6 +54,9 @@ function checkAgree(){
         "'" + job + "'" +
         ", '" + 0 + "'" +
         ", '" + bpk + "'" +
+        ", '" + "" + "'" +
+        ", '" + underwriteDay + "'" +
+        ", '" + "" + "'" +
         ", '" + "" + "'" +
         ", '" + "" + "'" +
         ", '" + "" + "'" +
@@ -113,6 +118,9 @@ function sendData(obj){
             ", '" + data.agmtCncsAgrmReqDt + "'" +
             ", '" + "" + "'" +
             ", '" + "" + "'" +
+            ", '" + "" + "'" +
+            ", '" + "" + "'" +
+            ", '" + "" + "'" +
             ");";
 
 
@@ -169,6 +177,7 @@ function sendData(obj){
                 ", '" + response.code + "'" +
                 ", '" + response.receive.resAgmtCncsAgrmDt + "'" +
                 ", '" + response.receive.resAgmtCncsAgrmValidDt + "'" +
+                ", '" + "" + "'" + // 변수 하나 확장함
                 ");";
 
 

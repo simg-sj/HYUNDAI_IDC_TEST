@@ -36,9 +36,9 @@ var day = _dateUtil.GET_DATE("YYMMDD", "DAY",0);
 console.log(day);
 
 /** * 심사배치 작동 자동차 -> 이륜차  */
-cron.schedule('50 30 00 * * *', () => {
-    start();
-});
+// cron.schedule('50 30 00 * * *', () => {
+//     start();
+// });
 
 start();
 async function start(){

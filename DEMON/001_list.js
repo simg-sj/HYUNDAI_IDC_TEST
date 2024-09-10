@@ -32,7 +32,7 @@ cron.schedule('*/15 * * * * *', () => {
     underwriteList();
 });
 
-
+underwriteList();
 
 function underwriteList(){
 
