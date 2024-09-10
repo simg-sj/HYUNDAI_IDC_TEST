@@ -291,6 +291,69 @@ module.exports = {
                 infoMsg,
         };
     },
+    bike005_ver2: function(data){
+        console.log(data);
+        let platform = data.platform;
+        let cell = data.cell;
+        let dName = data.dName;
+        let carNum = data.dCarNum;
+        let url = data.url;
+        let infoMsg = data.infoMsg;
+        let contractKey = data.contractKey;
+        let contractUrl = "https://mdirect.hi.co.kr/service.do?m=fdde99e0c6&cnc_no=654&media_no=B648&companyId=654&tid="+contractKey;
+        contractUrl = encodeURIComponent(contractUrl)
+
+        return result = {
+            "ALIGO_API_KEY":"xme5by3owdpvjw22tr57qzc2dwh7ch8f",
+            "ALIGO_USER_ID":"yoojjtt",
+            "ALIGO_SENDER_KEY":"04cdd54e4b161c3dbc2b9acb58259d44b94176d3",
+            "token":"",
+            "templateCode":"tpl_code=TU_3398",
+            "sender":"sender=18773006",
+            "receiver":"receiver_1="+cell,
+            "subject":"subject_1=현대해상 시간제보험 개인정보 제공동의 안내",
+            "message":"message_1="+
+                "안녕하세요, 현대해상 오토바이 시간제보험 심사 결과 안내해드립니다.\n" +
+                "\n" +
+                "신청 정보를 확인 후 체결이행동의를 진행해주시기 바랍니다.\n" +
+                "\n" +
+                "■ 신청 정보\n" +
+                "- 플랫폼 : "+platform+"\n" +
+                "- 신청자명 : "+dName+"\n" +
+                "- 차량번호 : "+carNum+"\n" +
+                "\n" +
+                "■ 시간제 보험 계약 체결이행 동의\n" +
+                "현대해상 오토바이 시간제 보험 계약 체결을 위해 아래 링크에서 체결이행 동의해주세요.\n" +
+                contractUrl + "\n" +
+                "\n" +
+                "※ 유의사항\n" +
+                "- 보험심사 통과이후 체결이행 동의를 하지 않은 경우 시간제보험 적용이 되지 않습니다.\n" +
+                "- 체결이행 동의를 하지 않은 상태에서의 운행 중 사고 발생 시 시간제보험이 적용되지 않습니다.\n" +
+                "- 계약시 등록한 오토바이 및 보험 계약 내용과 상이할 경우 보상에 제한이 있을 수 있습니다.\n"
+            ,
+            "failover":"Y",
+            "fsubject_1":"현대해상 시간제보험 개인정보 제공동의 안내",
+            "fmessage_1":
+                "안녕하세요, 현대해상 오토바이 시간제보험 심사 결과 안내해드립니다.\n" +
+                "\n" +
+                "신청 정보를 확인 후 체결이행동의를 진행해주시기 바랍니다.\n" +
+                "\n" +
+                "■ 신청 정보\n" +
+                "- 플랫폼 : "+platform+"\n" +
+                "- 신청자명 : "+dName+"\n" +
+                "- 차량번호 : "+carNum+"\n" +
+                "\n" +
+                "■ 시간제 보험 계약 체결이행 동의\n" +
+                "현대해상 오토바이 시간제 보험 계약 체결을 위해 아래 링크에서 체결이행 동의해주세요.\n" +
+                contractUrl + "\n" +
+                "\n" +
+                "※ 유의사항\n" +
+                "- 보험심사 통과이후 체결이행 동의를 하지 않은 경우 시간제보험 적용이 되지 않습니다.\n" +
+                "- 체결이행 동의를 하지 않은 상태에서의 운행 중 사고 발생 시 시간제보험이 적용되지 않습니다.\n" +
+                "- 계약시 등록한 오토바이 및 보험 계약 내용과 상이할 경우 보상에 제한이 있을 수 있습니다.\n"
+            ,
+        };
+    },
 
     bike006: function(data){
         console.log(data);
@@ -507,6 +570,132 @@ module.exports = {
                 "- 배달 수단 및 오토바이 개인유상보험으로 변경을 원하시는 경우, 카카오톡 채널(@배민커넥트)로 문의해주세요.",
         };
     },
+    baemin003_ver2: function(data){
+        console.log(data);
+        let platform = data.platform;
+        let cell = data.cell;
+        cell = '01082077529';
+        let dName = data.dName;
+        let carNum = data.dCarNum;
+        let url = data.url;
+
+        return result = {
+            "ALIGO_API_KEY":"xme5by3owdpvjw22tr57qzc2dwh7ch8f",
+            "ALIGO_USER_ID":"yoojjtt",
+            "ALIGO_SENDER_KEY":"04cdd54e4b161c3dbc2b9acb58259d44b94176d3",
+            "token":"",
+            "templateCode":"tpl_code=TT_9670",
+            "sender":"sender=18773006",
+            "receiver":"receiver_1="+cell,
+            "subject":"subject_1=현대해상 시간제보험 개인정보 제공동의 안내",
+            "message":"message_1="+
+                "배민커넥트 현대해상 오토바이 시간제보험 심사가 통과되었습니다.\n" +
+                "\n" +
+                "마지막으로, \n" +
+                "신청 정보를 확인후 보험 적용 및 유의사항을 확인해주세요.\n" +
+                "\n" +
+                "■ 신청 정보\n" +
+                "- 플랫폼 : "+platform+"\n" +
+                "- 신청자명 : "+dName+"\n" +
+                "- 차량번호 : "+carNum+"\n" +
+                "\n" +
+                "▶ 보험적용 방법 \n" +
+                "1) 카카오톡(@배민커넥트)로 이동\n" +
+                "2) [보험 적용 요청]을 눌러, 정보 제출\n" +
+                "3) 정상 적용 시, 배민커넥트 앱 > [시간제보험] 표기\n" +
+                "- 배민커넥트 채널 바로가기 : https://pf.kakao.com/_xdhKKT/chat\n" +
+                "\n" +
+                "※ 유의사항\n" +
+                "- 기존에 다른 수단, 보험을 이용 후 변경하는 경우, 카카오톡 채널(@배민커넥트)로 반드시 변경 신청해주세요.\n" +
+                "- 카카오톡 채널로 보험 적용 신청을 하지 않은 경우, 보험 심사가 완료되어도 보험이 적용되지 않습니다.\n" +
+                "- 운행 오토바이, 계약내용, 책임보험 용도가 변경될 경우, 반드시 보험사에 통보해주세요. \n" +
+                "- 계약 내용이 실제와 다를 경우 보상에 제한이 있을 수 있습니다.\n" +
+                "- 배달 중의 사고 발생 문의는 현대해상 사고접수번호로 접수해주세요. (1588-5656)\n" +
+                "- 배달 수단 및 오토바이 개인유상보험으로 변경을 원하시는 경우, 카카오톡 채널(@배민커넥트)로 문의해주세요.",
+            "failover":"Y",
+            "fsubject_1":"현대해상 시간제보험 개인정보 제공동의 안내",
+            "fmessage_1":
+                "배민커넥트 현대해상 오토바이 시간제보험 심사가 통과되었습니다.\n" +
+                "\n" +
+                "마지막으로, \n" +
+                "신청 정보를 확인후 보험 적용 및 유의사항을 확인해주세요.\n" +
+                "\n" +
+                "■ 신청 정보\n" +
+                "- 플랫폼 : "+platform+"\n" +
+                "- 신청자명 : "+dName+"\n" +
+                "- 차량번호 : "+carNum+"\n" +
+                "\n" +
+                "▶ 보험적용 방법 \n" +
+                "1) 카카오톡(@배민커넥트)로 이동\n" +
+                "2) [보험 적용 요청]을 눌러, 정보 제출\n" +
+                "3) 정상 적용 시, 배민커넥트 앱 > [시간제보험] 표기\n" +
+                "- 배민커넥트 채널 바로가기 : https://pf.kakao.com/_xdhKKT/chat\n" +
+                "\n" +
+                "※ 유의사항\n" +
+                "- 기존에 다른 수단, 보험을 이용 후 변경하는 경우, 카카오톡 채널(@배민커넥트)로 반드시 변경 신청해주세요.\n" +
+                "- 카카오톡 채널로 보험 적용 신청을 하지 않은 경우, 보험 심사가 완료되어도 보험이 적용되지 않습니다.\n" +
+                "- 운행 오토바이, 계약내용, 책임보험 용도가 변경될 경우, 반드시 보험사에 통보해주세요. \n" +
+                "- 계약 내용이 실제와 다를 경우 보상에 제한이 있을 수 있습니다.\n" +
+                "- 배달 중의 사고 발생 문의는 현대해상 사고접수번호로 접수해주세요. (1588-5656)\n" +
+                "- 배달 수단 및 오토바이 개인유상보험으로 변경을 원하시는 경우, 카카오톡 채널(@배민커넥트)로 문의해주세요.",
+        };
+    },
+    baemin003_ver3: function(data){
+        console.log(data);
+        let platform = data.platform;
+        let cell = data.cell;
+        cell = '01082077529';
+        let dName = data.dName;
+        let carNum = data.dCarNum;
+        let contractKey = data.contractKey;
+        let contractUrl = "https://mdirect.hi.co.kr/service.do?m=fdde99e0c6&cnc_no=654&media_no=B648&companyId=654&tid="+contractKey;
+        contractUrl = encodeURIComponent(contractUrl)
+
+        let url = data.url;
+
+        return result = {
+            "ALIGO_API_KEY":"xme5by3owdpvjw22tr57qzc2dwh7ch8f",
+            "ALIGO_USER_ID":"yoojjtt",
+            "ALIGO_SENDER_KEY":"04cdd54e4b161c3dbc2b9acb58259d44b94176d3",
+            "token":"",
+            "templateCode":"tpl_code=TU_3590",
+            "sender":"sender=18773006",
+            "receiver":"receiver_1="+cell,
+            "subject":"subject_1=현대해상 시간제보험 개인정보 제공동의 안내",
+            "message":"message_1="+
+                "안녕하세요, 배민커넥트 현대해상 오토바이 시간제보험 심사가 통과되었습니다.\n" +
+                "\n" +
+                "■ 신청 정보\n" +
+                "- 플랫폼 : "+platform+"\n" +
+                "- 신청자명 : "+dName+"\n" +
+                "- 차량번호 : "+carNum+"\n" +
+                "\n" +
+                "아래 링크에서 보험 계약 체결이행에 동의해주세요.\n" +
+                contractUrl + "\n" +
+                "\n" +
+                "■ 유의사항\n" +
+                "- 보험심사 통과이후 체결이행 동의를 하지 않은 경우 시간제보험 적용이 되지 않습니다.\n" +
+                "- 체결이행 동의를 하지 않은 상태에서의 운행 중 사고 발생 시 시간제보험이 적용되지 않습니다.\n" +
+                "- 계약시 등록한 오토바이 및 보험 계약 내용과 상이할 경우 보상에 제한이 있을 수 있습니다.\n",
+            "failover":"Y",
+            "fsubject_1":"현대해상 시간제보험 개인정보 제공동의 안내",
+            "fmessage_1":
+                "안녕하세요, 배민커넥트 현대해상 오토바이 시간제보험 심사가 통과되었습니다.\n" +
+                "\n" +
+                "■ 신청 정보\n" +
+                "- 플랫폼 : "+platform+"\n" +
+                "- 신청자명 : "+dName+"\n" +
+                "- 차량번호 : "+carNum+"\n" +
+                "\n" +
+                "아래 링크에서 보험 계약 체결이행에 동의해주세요.\n" +
+                contractUrl + "\n" +
+                "\n" +
+                "■ 유의사항\n" +
+                "- 보험심사 통과이후 체결이행 동의를 하지 않은 경우 시간제보험 적용이 되지 않습니다.\n" +
+                "- 체결이행 동의를 하지 않은 상태에서의 운행 중 사고 발생 시 시간제보험이 적용되지 않습니다.\n" +
+                "- 계약시 등록한 오토바이 및 보험 계약 내용과 상이할 경우 보상에 제한이 있을 수 있습니다.\n",
+        };
+    },
     baemin004: function(data){
         console.log(data);
         let platform = data.platform;
@@ -655,6 +844,223 @@ module.exports = {
                 "■ 유의사항 \n" +
                 "- 보험 재가입을 원하시는 경우 가입페이지에서 다시 한 번 신청해주세요.  \n" +
                 "- 오토바이 개인유상운송보험 또는 다른 이동수단으로 변경을 원하실 경우 카카오톡 채널(@배민커넥트)에 문의해주세요.  \n (https://pf.kakao.com/_xdhKKT)"
+
+
+        };
+    },
+    contractComplete_baemin: function(data){
+        console.log(data);
+        let platform = data.platform;
+        let cell = data.cell;
+        cell = '01082077529';
+        let dName = data.dName;
+        let carNum = data.dCarNum;
+
+        return result = {
+            "ALIGO_API_KEY":"xme5by3owdpvjw22tr57qzc2dwh7ch8f",
+            "ALIGO_USER_ID":"yoojjtt",
+            "ALIGO_SENDER_KEY":"04cdd54e4b161c3dbc2b9acb58259d44b94176d3",
+            "token":"",
+            "templateCode":"tpl_code=TU_3591",
+            "sender":"sender=18773006",
+            "receiver":"receiver_1="+cell,
+            "subject":"subject_1=현대해상 배민 체결이행 완료 안내",
+            "message":"message_1="+
+
+                "안녕하세요, 배민커넥트 현대해상 오토바이 시간제보험 체결 이행 동의가 완료되었습니다.\n" +
+                "\n" +
+                "마지막으로, 신청 정보를 확인하고 보험적용을 요청해주세요.\n" +
+                "\n" +
+                "■ 신청 정보\n" +
+                "- 플랫폼 : "+platform+"\n" +
+                "- 신청자명 : "+dName+"\n" +
+                "- 차량번호 : "+carNum+"\n" +
+                "\n" +
+                "▶ 보험적용 방법 \n" +
+                "1) 카카오톡(@배민커넥트)로 이동\n" +
+                "2) [보험 적용 요청]을 눌러, 정보 제출\n" +
+                "3) 정상 적용 시, 배민커넥트 앱 > [시간제보험] 표기\n" +
+                "- 배민커넥트 채널 바로가기: https://pf.kakao.com/_xdhKKT/chat\n" +
+                "\n" +
+                "※ 유의사항\n" +
+                "- 기존에 다른 수단, 보험을 이용 후 변경하는 경우, 카카오톡 채널(@배민커넥트)로 반드시 변경 신청해주세요.\n" +
+                "- 카카오톡 채널로 보험 적용 신청을 하지 않은 경우, 보험 심사가 완료되어도 보험이 적용되지 않습니다.\n" +
+                "- 운행 오토바이, 계약내용, 책임보험 용도가 변경될 경우, 반드시 보험사에 통보해주세요.\n" +
+                "- 계약 내용이 실제와 다를 경우 보상에 제한이 있을 수 있습니다.\n" +
+                "- 배달 중의 사고 발생 문의는 현대해상 사고접수번호로 접수해주세요. (1588-5656)\n" +
+                "- 배달 수단 및 오토바이 개인유상보험으로 변경을 원하시는 경우, 카카오톡 채널(@배민커넥트)로 문의해주세요.\n"
+            ,
+            "failover":"Y",
+            "fsubject_1":"현대해상 배민 체결이행 완료 안내",
+            "fmessage_1":
+
+                "안녕하세요, 배민커넥트 현대해상 오토바이 시간제보험 체결 이행 동의가 완료되었습니다.\n" +
+                "\n" +
+                "마지막으로, 신청 정보를 확인하고 보험적용을 요청해주세요.\n" +
+                "\n" +
+                "■ 신청 정보\n" +
+                "- 플랫폼 : "+platform+"\n" +
+                "- 신청자명 : "+dName+"\n" +
+                "- 차량번호 : "+carNum+"\n" +
+                "\n" +
+                "▶ 보험적용 방법 \n" +
+                "1) 카카오톡(@배민커넥트)로 이동\n" +
+                "2) [보험 적용 요청]을 눌러, 정보 제출\n" +
+                "3) 정상 적용 시, 배민커넥트 앱 > [시간제보험] 표기\n" +
+                "- 배민커넥트 채널 바로가기: https://pf.kakao.com/_xdhKKT/chat\n" +
+                "\n" +
+                "※ 유의사항\n" +
+                "- 신규 가입시 보험의 책임개시는 다음날 00시 기준이나, 배민 연동 시작 시간에 따라 상이할 수 있습니다.\n" +
+                "- 신규 가입이 아닌, 기존 시간제보험 통과 라이더님의 경우 이 알림이후 운행부터 적용됩니다.\n" +
+                "- 기존에 다른 수단, 보험을 이용 후 변경하는 경우, 카카오톡 채널(@배민커넥트)로 반드시 변경 신청해주세요.\n" +
+                "- 카카오톡 채널로 보험 적용 신청을 하지 않은 경우, 보험 심사가 완료되어도 보험이 적용되지 않습니다.\n" +
+                "- 운행 오토바이, 계약내용, 책임보험 용도가 변경될 경우, 반드시 보험사에 통보해주세요.\n" +
+                "- 계약 내용이 실제와 다를 경우 보상에 제한이 있을 수 있습니다.\n" +
+                "- 배달 중의 사고 발생 문의는 현대해상 사고접수번호로 접수해주세요. (1588-5656)\n" +
+                "- 배달 수단 및 오토바이 개인유상보험으로 변경을 원하시는 경우, 카카오톡 채널(@배민커넥트)로 문의해주세요.\n"
+
+
+        };
+    },
+    contractComplete_gita: function(data){
+        console.log(data);
+        let platform = data.platform;
+        let cell = data.cell;
+        cell = '01082077529';
+        let dName = data.dName;
+        let carNum = data.dCarNum;
+
+        return result = {
+            "ALIGO_API_KEY":"xme5by3owdpvjw22tr57qzc2dwh7ch8f",
+            "ALIGO_USER_ID":"yoojjtt",
+            "ALIGO_SENDER_KEY":"04cdd54e4b161c3dbc2b9acb58259d44b94176d3",
+            "token":"",
+            "templateCode":"tpl_code=TU_4056",
+            "sender":"sender=18773006",
+            "receiver":"receiver_1="+cell,
+            "subject":"subject_1=현대해상 체결이행 완료 안내",
+            "message":"message_1="+
+
+                "안녕하세요, 현대해상 오토바이 시간제보험 체결이행 동의가 완료되었습니다.\n" +
+                "\n" +
+                "실제 보험은 체결이행 동의가 완료된 다음날 00시 기준으로 적용됩니다.\n" +
+                "\n" +
+                "플랫폼사에서 해당시간에 보험정보 연동이 완료되니 운행시 주의바랍니다.\n" +
+                "\n" +
+                "■ 신청 정보\n" +
+                "- 플랫폼 : "+platform+"\n" +
+                "- 신청자명 : "+dName+"\n" +
+                "- 차량번호 : "+carNum+"\n" +
+                "\n" +
+                "※ 유의사항\n" +
+                "- 신규 가입시 보험의 책임개시는 다음날 00시 기준이나, 배민 연동 시작 시간에 따라 상이할 수 있습니다.\n" +
+                "- 신규 가입이 아닌, 기존 시간제보험 통과 라이더님의 경우 이 알림이후 운행부터 적용됩니다.\n" +
+                "- 운행 오토바이가 변경될 경우, 반드시 보험사에 통보해주세요. \n" +
+                "- 계약한 오토바이의 책임보험 용도 및 계약 내용 변경 시, 반드시 보험사에 통보해주세요. \n" +
+                "- 계약시 등록한 오토바이 및 보험 계약 내용과 상이할 경우 보상에 제한이 있을 수 있습니다. \n" +
+                "- 배달 중 사고 발생 시 현대해상 고객센터로 접수해주세요. (1588-5656 )\n"
+            ,
+            "failover":"Y",
+            "fsubject_1":"현대해상 체결이행 완료 안내",
+            "fmessage_1":
+
+                "안녕하세요, 현대해상 오토바이 시간제보험 체결이행 동의가 완료되었습니다.\n" +
+                "\n" +
+                "실제 보험은 체결이행 동의가 완료된 다음날 00시 기준으로 적용됩니다.\n" +
+                "\n" +
+                "플랫폼사에서 해당시간에 보험정보 연동이 완료되니 운행시 주의바랍니다.\n" +
+                "\n" +
+                "■ 신청 정보\n" +
+                "- 플랫폼 : "+platform+"\n" +
+                "- 신청자명 : "+dName+"\n" +
+                "- 차량번호 : "+carNum+"\n" +
+                "\n" +
+                "※ 유의사항\n" +
+                "- 신규 가입시 보험의 책임개시는 다음날 00시 기준이나, 배민 연동 시작 시간에 따라 상이할 수 있습니다.\n" +
+                "- 신규 가입이 아닌, 기존 시간제보험 통과 라이더님의 경우 이 알림이후 운행부터 적용됩니다.\n" +
+                "- 운행 오토바이가 변경될 경우, 반드시 보험사에 통보해주세요. \n" +
+                "- 계약한 오토바이의 책임보험 용도 및 계약 내용 변경 시, 반드시 보험사에 통보해주세요. \n" +
+                "- 계약시 등록한 오토바이 및 보험 계약 내용과 상이할 경우 보상에 제한이 있을 수 있습니다. \n" +
+                "- 배달 중 사고 발생 시 현대해상 고객센터로 접수해주세요. (1588-5656 )\n"
+
+
+        };
+    },
+    contract_delay: function(data){
+        console.log(data);
+        let platform = data.platform;
+        let cell = data.cell;
+        cell = '01082077529';
+        let dName = data.dName;
+        let carNum = data.dCarNum;
+        let limitDay = "";
+        let contractKey = data.contractKey;
+        let contractUrl = "https://mdirect.hi.co.kr/service.do?m=fdde99e0c6&cnc_no=654&media_no=B648&companyId=654&tid="+contractKey;
+        contractUrl = encodeURIComponent(contractUrl);
+        let bdpk = data.bdpk;
+        let simgContractUrl = "http://127.0.0.1:5500/?drv=3SWPzj+x93cMbU+kpTEfKA==";
+        simgContractUrl = encodeURIComponent(simgContractUrl);
+
+        return result = {
+            "ALIGO_API_KEY":"xme5by3owdpvjw22tr57qzc2dwh7ch8f",
+            "ALIGO_USER_ID":"yoojjtt",
+            "ALIGO_SENDER_KEY":"04cdd54e4b161c3dbc2b9acb58259d44b94176d3",
+            "token":"",
+            "templateCode":"tpl_code=TU_4837",
+            "sender":"sender=18773006",
+            "receiver":"receiver_1="+cell,
+            "subject":"subject_1=현대해상 체결이행 완료 안내",
+            "message":"message_1="+
+
+                "안녕하세요, 현대해상 오토바이 시간제보험 입니다.\n" +
+                "\n" +
+                "신청 정보를 확인 후 체결이행동의를 진행해주시기 바랍니다.\n" +
+                "체결이행동의가 완료되지 않을 경우, 현대해상 오토바이 시간제보험 이용이 불가합니다.\n" +
+                "\n" +
+                "■ 신청 정보\n" +
+                "- 플랫폼 : "+platform+"\n" +
+                "- 신청자명 : "+dName+"\n" +
+                "- 차량번호 : "+carNum+"\n" +
+                "\n" +
+                "■ 시간제 보험 계약 체결이행 동의\n" +
+                "현대해상 오토바이 시간제 보험 계약 체결을 위해 아래 링크에서 체결이행 동의해주세요.\n" +
+                contractUrl + "\n" +
+                "\n" +
+                "※ 유의사항\n" +
+                "- 심사가 통과된후 체결이행 동의 하지 않은 경우, 현대해상 오토바이 시간제보험 이용이 불가하며 동의 전 발생한 사고는 보험이 적용되지 않습니다.\n" +
+                "- 운행 오토바이가 변경될 경우, 반드시 보험사에 통보해주세요. \n" +
+                "- 계약한 오토바이의 책임보험 용도 및 계약 내용 변경 시, 반드시 보험사에 통보해주세요.\n" +
+                "- 계약시 등록한 오토바이 및 보험 계약 내용과 상이할 경우 보상에 제한이 있을 수 있습니다.\n" +
+                "- 체결이행 동의를 진행을 원하지 않거나 미수신을 원할 경우 아래 링크에서 미수신동의 바랍니다.\n" +
+                simgContractUrl
+
+
+            ,
+            "failover":"Y",
+            "fsubject_1":"현대해상 체결이행 완료 안내",
+            "fmessage_1":
+
+                "안녕하세요, 현대해상 오토바이 시간제보험 입니다.\n" +
+                "\n" +
+                "신청 정보를 확인 후 체결이행동의를 진행해주시기 바랍니다.\n" +
+                "체결이행동의가 완료되지 않을 경우, 현대해상 오토바이 시간제보험 이용이 불가합니다.\n" +
+                "\n" +
+                "■ 신청 정보\n" +
+                "- 플랫폼 : "+platform+"\n" +
+                "- 신청자명 : "+dName+"\n" +
+                "- 차량번호 : "+carNum+"\n" +
+                "\n" +
+                "■ 시간제 보험 계약 체결이행 동의\n" +
+                "현대해상 오토바이 시간제 보험 계약 체결을 위해 아래 링크에서 체결이행 동의해주세요.\n" +
+                contractUrl + "\n" +
+                "\n" +
+                "※ 유의사항\n" +
+                "- 심사가 통과된후 체결이행 동의 하지 않은 경우, 현대해상 오토바이 시간제보험 이용이 불가하며 동의 전 발생한 사고는 보험이 적용되지 않습니다.\n" +
+                "- 운행 오토바이가 변경될 경우, 반드시 보험사에 통보해주세요. \n" +
+                "- 계약한 오토바이의 책임보험 용도 및 계약 내용 변경 시, 반드시 보험사에 통보해주세요.\n" +
+                "- 계약시 등록한 오토바이 및 보험 계약 내용과 상이할 경우 보상에 제한이 있을 수 있습니다.\n" +
+                "- 체결이행 동의를 진행을 원하지 않거나 미수신을 원할 경우 아래 링크에서 미수신동의 바랍니다.\n" +
+                simgContractUrl
 
 
         };

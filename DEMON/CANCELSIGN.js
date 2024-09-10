@@ -2,7 +2,7 @@ const cron = require('node-cron');
 const _mysqlUtil = require('../UTIL/sql_lib');
 const _dateUtil = require('../UTIL/date_lib');
 var network_api = require('../UTIL/network_lib');
-var underwriteRoute  = require('../ROUTES/underwriteResult');
+var cancelsignRoute  = require('../ROUTES/cancelsignResult');
 const deployConfig = require("../SERVER/deploy_config.json");
 const serviceList = require("../CONFIG/service_config");
 const date_api = require("../UTIL/date_lib");
@@ -17,9 +17,9 @@ const bpk = 1; // 딜버 전용
 /**
  *
  *
- * 심사 리스트 전송 하기
+ * 기명 취소
  *
- * 매분의 20초에 한번씩 실행
+ * 현대는 실시간 이지만 기명취소 취소를 할수있기 떄문에 하루 한번 20시 50분 50초에 실행
  *
  *
  *
@@ -35,10 +35,9 @@ svs.forEach(function(e){
 
 
 // underwriteRequest();
-// cron.schedule('20 * * * * *', () => {
-//     underwriteRequest();
+// cron.schedule('50 50 20 * * *', () => {
+//     cancelSignRequest();
 // });
-
 
 cancelSignRequest();
 
@@ -49,26 +48,16 @@ cancelSignRequest();
 function cancelSignRequest(){
 
     let job = 'BATCH';
-    let regiGbn = 'NEW';
     let limitCount = '100000';
     let fileDay = _dateUtil.GET_DATE("YYMMDD", "NONE",0);
-    console.log("fileDay : ", fileDay);
-    // let bpk = bpk;
-    let dpk = '';
-    let dName = '';
-    let result = '';
-    let resultDetail = '';
-    let dambo = '';
-    let recvDay = '';
-    let validDay = '';
-    let mangi = '';
+
 
     let query = "CALL bike000078(" +
         "'" + job + "'" +
         ", '" + limitCount + "'" +
         ", '" + fileDay + "'" +
         ", '" + bpk + "'" +
-        ", '" + dpk + "'" +
+        ", '" + '_dpk' + "'" +
         ", '" + '_policyNumber' + "'" +
         ", '" + '_dDambo' + "'" +
         ", '" + '_dSocialNo' + "'" +
@@ -81,8 +70,7 @@ function cancelSignRequest(){
         ", '" + '_resultValidDay' + "'" +
         ");";
 
-
-    console.log(query);
+    console.log("query is ::::: ", query)
     _mysqlUtil.mysql_proc_exec(query, schema).then(function(result){
         // console.log('MYSQL RESULT : ', result[0]);
         let data = result[0];
@@ -95,7 +83,7 @@ function cancelSignRequest(){
             let obj;
             for(var i=0; i< valueRow.length; i++){
                 obj = valueRow[i];
-                console.log(obj);
+                console.log("obj is ::::::", obj);
                 sendData(obj);
                 await timer(1000);
             }
@@ -110,46 +98,9 @@ function cancelSignRequest(){
 function sendData(obj){
 
     /*
-    * 심사신청시 정상 전문
-    * {
-          bizCode: '004',
-          resDrvrID: 'B100034594',
-          resDrvrNm: '박대길',
-          resDrvrMpNo: '01057688525',
-          resDrvrResdNo: '',
-          resInsdPlnAgrmYN: 'Y',
-          resInsdplnAgrmDt: '',
-          resInsdPlnAgrmMthd: '03',
-          resAutoNo: '경북포항자0026',
-          resDrvgAutoTyp: '1',
-          resOwcrInsdChcYn: '',
-          resAutoOwrSameYn: '',
-          resDrvrOwrRl: '00',
-          resAutoOwrNm: '',
-          resAutoOwrMpNo: '',
-          resAutoOwrResdNo: '9102091785510',
-          resAutoOwrInsPlnAgrmYn: '',
-          resAutoOwrInsdPlnAgrmDt: '',
-          resAutoOwrInsdPlnAgrmNo: '',
-          resAutoOwrInsdplnAgrmMthd: '',
-          resAutoNoModYn: 'N',
-          resPrevAutoNo: '',
-          resDataTrDt: '20240308',
-          resPerinj2InsdYn: '1',
-          resObiInsdYn: '1',
-          resOwcrInsdYn: '1',
-          resPlyNo: 'M2024206030600000',
-          resAgmtEdDt: '20240731',
-          resInsdCo: '',
-          resProdCd: '5802',
-          resCoprCat: '001',
-          resTwhvcUsedUsage: ''
-       }
+    * 기명취소 정상 전문
     *
-    * */
-
-
-
+    */
 
     let cancelSignObj = {
         "bizCode":"004",
@@ -201,10 +152,10 @@ function sendData(obj){
     cancelSignObj.resAutoNo = obj.dCarNum;
     cancelSignObj.resAutoOwrResdNo = obj.socialNo;
     cancelSignObj.resDataTrDt = _dateUtil.GET_DATE("YYMMDD", "NONE",0);
-    cancelSignObj.resAgmtEdDt = obj.reqPnoToDay; // 사전에 전달된 보험종기로만 전달해야함
+    cancelSignObj.resAgmtEdDt = obj.pNoToDay; // 사전에 전달된 보험종기로만 전달해야함
 
     cancelSignObj.resDrvrOwrRl = obj.relation;  // resDrvrOwrRl 을 관계코드로 활용 [ 2024-01 ]
-    cancelSignObj.resPlyNo = obj.reqPno;
+    cancelSignObj.resPlyNo = obj.pNo;
     // cancelSignObj.resInsdCo = String(bpk).padStart(3,'0');
     cancelSignObj.resCoprCat = String(bpk).padStart(3,'0');
     cancelSignObj.resProdCd = "5802";
@@ -217,39 +168,39 @@ function sendData(obj){
     }
 
     console.log('cancelSignObj : ', cancelSignObj); // 전송전문 확인
-    return;
+
     network_api.network_h001(cancelSignObj).then(function(result){
-        console.log('현대 응답값', result);
+        console.log('현대 응답값 check 1 : ', result);
 
 
         // 심사 오류 및 예외처리(슬랙푸시)
         if(result.code != 200){
             let resultMessage = result.receive.Fault.message;
 
-            // let msg = ''
-            // msg += '[심사오류 알림]' + '\n'
-            // msg += ` • 오류자 : 배민 ${obj.bdpk} | ${obj.dName}` + '\n'
-            // msg += ` • 결과코드 : ${result.code}` + '\n'
-            // msg += ` • 결과메세지 : ${resultMessage}` + '\n'
-            //
-            // let data = {
-            //     "channel": "#ict팀",
-            //     "username": "현대해상 시간제 보험",
-            //     "text": msg,
-            //     "icon_emoji": ":ghost:"
-            // };
-            //
-            // network_api.simg_slackWebHook(data).then(function(result){
-            //     console.log(result);
-            // })
-            //
-            // return
+            let msg = ''
+            msg += '[심사오류 알림]' + '\n'
+            msg += ` • 오류자 : 배민 ${obj.bdpk} | ${obj.dName}` + '\n'
+            msg += ` • 결과코드 : ${result.code}` + '\n'
+            msg += ` • 결과메세지 : ${resultMessage}` + '\n'
+
+            let data = {
+                "channel": "#ict팀",
+                "username": "현대해상 시간제 보험",
+                "text": msg,
+                "icon_emoji": ":ghost:"
+            };
+
+            network_api.simg_slackWebHook(data).then(function(result){
+                console.log(result);
+            })
+
+            return
         }
 
 
 
         let res_data = {
-            reqCoprCat:underwriteObj.resCoprCat,
+            reqCoprCat:cancelSignObj.resCoprCat,
             reqDrvrID:result.receive.reqDrvrID,
             reqDrvrNm:result.receive.reqDrvrNm,
             reqUnwrRslt:result.receive.reqUnwrRslt,
@@ -260,20 +211,17 @@ function sendData(obj){
             reqErrTypCd:result.receive.reqErrTypCd,
         }
 
-        console.log(res_data)
+        console.log('현대 응답값 check 2 : ',res_data);
 
 
 
-        underwriteRoute.UNDERWRITERESULT(res_data).then(function(result){
-            console.log("심사결과 반영", result);
+        cancelsignRoute.CANCELSIGNRESULT(res_data).then(function(result){
+             console.log("기명취소 결과 반영", result);
 
         })
 
 
     });
-
-
-
 
 }
 

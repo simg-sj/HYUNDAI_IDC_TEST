@@ -16,6 +16,7 @@ module.exports={
         let url = connection.host;
         let port = connection.port;
         let endpoint = "http://"+url + ":" +port;
+        console.log('endpoint : ', endpoint);
 
 
         return new Promise(function(resolve,reject){

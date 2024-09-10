@@ -34,6 +34,14 @@ function accident_config() {
 
             },
             {
+                apiUrl : "https://connect-bike-run2u.simginsu.net",
+                route     : "/api/v1/request/client/accident",
+                bpk     : 6,
+                type : 'BIKE',
+
+
+            },
+            {
                 apiUrl : "https://connect-bike-owra.simginsu.net",
                 route     : "/api/v1/request/client/accident",
                 bpk     : 7,
@@ -53,6 +61,14 @@ function accident_config() {
                 apiUrl : "https://connect-bike-doeat.simginsu.net",
                 route     : "/api/v1/request/client/accident",
                 bpk     : 9,
+                type : 'BIKE',
+
+
+            },
+            {
+                apiUrl : "https://connect-bike-barogo.simginsu.net",
+                route     : "/api/v1/request/client/accident",
+                bpk     : 10,
                 type : 'BIKE',
 
 
@@ -109,6 +125,14 @@ function accident_config() {
                 apiUrl : "https://connect-bike-doeat-dev.simginsu.net",
                 route     : "/api/v1/request/client/accident",
                 bpk     : 9,
+                type : 'BIKE',
+
+
+            },
+            {
+                apiUrl : "https://connect-bike-gonggam-test.simginsu.net",
+                route     : "/api/v1/request/client/accident",
+                bpk     : 11,
                 type : 'BIKE',
 
 

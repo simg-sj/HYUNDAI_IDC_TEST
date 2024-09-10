@@ -179,6 +179,17 @@ function service_config() {
                 agreeUrl     : "https://connect-bike-doeat-dev.simginsu.net/check",
 
             },
+            {
+                serviceName : "공감",
+                dbAccess     : "hyundai_run2u_dev",
+                bpk     : 11,
+                type : 'BIKE',
+                key: 'CC88FD60-3A71-11EF-9E64-6FAD2203D7C2',
+                iv:'dc7ee041c6033f59',
+                joinUrl     : "https://connect-bike-gonggam-dev.simginsu.net/",
+                agreeUrl     : "https://connect-bike-gonggam-dev.simginsu.net/check",
+
+            },
         ]
     };
     return return_val;
