@@ -574,7 +574,7 @@ module.exports = {
         console.log(data);
         let platform = data.platform;
         let cell = data.cell;
-        cell = '01082077529';
+        // cell = '01082077529';
         let dName = data.dName;
         let carNum = data.dCarNum;
         let url = data.url;

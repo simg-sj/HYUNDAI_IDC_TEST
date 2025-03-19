@@ -7,6 +7,7 @@ var router = express.Router();
 
 var underwriteRoute  = require('./underwriteResult');
 var accidentRoute = require('./accidentRequest');
+var renewPolicyRoute = require('./renew_policy');
 
 
 
@@ -60,6 +61,14 @@ router.post('/', function(req, res, next) {
         accidentRoute.ACCIDENTREQUEST(request_data).then(function(result){
             res.status(200).send(result);
         })
+    }
+
+    /** **/
+    if(request_data.bizCode == '009'){
+        console.log("증권번호 암호화값 라우트 수신 라우트");
+        renewPolicyRoute.RENEW_POLICY_CIDATA(request_data).then(function(result){
+           res.status(200).send(result);
+        });
     }
 
 

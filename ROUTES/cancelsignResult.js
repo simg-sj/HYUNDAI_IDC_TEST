@@ -30,7 +30,7 @@ module.exports = {
      * }
      *
      */
-    CANCELSIGNRESULT: function(request_data){
+    CANCELSIGNRESULT: function(request_data, fileDay){
 
         return new Promise(function (resolve, reject) {
 
@@ -38,24 +38,25 @@ module.exports = {
 
             let job = 'RS';
             let limitCount = '100000';
-            let fileDay = date_api.GET_DATE("YYMMDD", "NONE",0);
+            // let fileDay = date_api.GET_DATE("YYMMDD", "NONE",0);
             let bpk = request_data.reqCoprCat;
             bpk = bpk.replace(/(^0+)/, ""); // 0 왼쪽 패딩 0 제거
             let dpk = request_data.reqDrvrID;
             let reqErrTypCd = request_data.reqErrTypCd; // 심사전 유효성검사시 에러관련 코드
-            let result = "";
+            let resultMsg = "";
             let resultDetail = "";
             console.log('유효성체크 값 : ', reqErrTypCd);
             if(reqErrTypCd === null){
-                result = filterResult(request_data.reqUnwrRslt);
-                resultDetail = filterResultDetail(request_data.reqUnwrRsltDet);
+                resultMsg = filterResult(request_data.reqUnwrRslt);
+                // resultDetail = filterResultDetail(request_data.reqUnwrRsltDet);
             }else{
-                result = 'ERROR';
-                resultDetail = filterErrorCodeResult(reqErrTypCd);
+                resultMsg = filterErrorCodeResult(reqErrTypCd);
+                // resultDetail = filterErrorCodeResult(reqErrTypCd);
 
             }
             let recvCode = request_data.reqUnwrRslt;
             let recvDetailCode = request_data.reqUnwrRsltDet;
+            let policyNumber = request_data.reqPlyNo;
 
             svs.forEach(function(e){
                 if(e.bpk == bpk){
@@ -71,12 +72,12 @@ module.exports = {
                 ", '" + fileDay + "'" +
                 ", '" + bpk + "'" +
                 ", '" + dpk + "'" +
-                ", '" + '_policyNumber' + "'" +
+                ", '" + policyNumber + "'" +
                 ", '" + '_dDambo' + "'" +
                 ", '" + '_dSocialNo' + "'" +
                 ", '" + '_dCarNum' + "'" +
                 ", '" + recvCode + "'" +
-                ", '" + result + "'" +
+                ", '" + resultMsg + "'" +
                 ", '" + '_resultDambo' + "'" +
                 ", '" + '_resultSday' + "'" +
                 ", '" + '_resultEday' + "'" +
@@ -155,6 +156,7 @@ module.exports = {
                 // case '05' : returnValue = defaultText + '지정1인추가요청 - 피보험자 미존재';
                 case '06' : returnValue = defaultText + '유효하지않은 라이더정보'; break; // 지정1인 유효값외 유입되는 경우
                 case '07' : returnValue = defaultText + '기등록자'; break;
+                case '08' : returnValue = defaultText + '체결이행미동의'; break;
             }
             return returnValue;
         }

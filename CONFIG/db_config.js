@@ -158,6 +158,19 @@ function db_config() {
             },
             multipleStatements: true
         },
+        "simg_center" : {
+            connectionLimit : 1000,
+            host     : 'simg-center.c73he84duiho.ap-northeast-2.rds.amazonaws.com',
+            port     : 3306,
+            user     : 'simg',
+            password : 'simg8970',
+            database : 'simgcenter',
+            options: {
+                connectTimeout  : 1000 * 480000,
+                requestTimeout  : 1000 * 480000
+            },
+            multipleStatements: true
+        }
 
 
 

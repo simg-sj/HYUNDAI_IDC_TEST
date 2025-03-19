@@ -709,9 +709,9 @@ module.exports = {
 
     },
     PLATFORM: function(request_data, schema, bpk) {
-        console.log("PLATFORM ACCIDENT REQUEST - data :: ", request_data);
-        console.log("PLATFORM ACCIDENT REQUEST - schema :: ", schema);
-        console.log("PLATFORM ACCIDENT REQUEST - bpk :: ", bpk);
+        console.log("PLATFORM ACCIDENT REQUEST", request_data);
+        console.log(schema);
+        console.log(bpk);
 
 
         let job = "SEARCH";
@@ -854,34 +854,37 @@ module.exports = {
                                 // res.json(success);
                                 resolve(success)
                             }else{
-                                console.log('운행아이디 : ',result.receive[0].drivingId);
-                                console.log('운행 기록 시간 : ',result.receive[0].locationRecordDateTime);
-                                console.log('사고 발생 시간 : ',result.receive[0].investigateDateTime);
-                                console.log('위도 : ',result.receive[0].lat);
-                                console.log('경도 : ',result.receive[0].lng);
-                                console.log('픽업지 ~ : ', result.receive[0].deliveries[0].pickupAddress)
-                                console.log('목적지 ~ : ', result.receive[0].deliveries[0].deliveryAddress);
+                                console.log('result : ', result);
+                                console.log("result.receive[0] : ",result.receive);
+                                console.log('운행아이디 : ',result.receive.drivingId);
+                                console.log('운행라이더 아이디 : ',result.receive.apiDriverId);
+                                console.log('운행 기록 시간 : ',result.receive.locationRecordDateTime);
+                                console.log('사고 발생 시간 : ',result.receive.investigateDateTime);
+                                console.log('위도 : ',result.receive.lat);
+                                console.log('경도 : ',result.receive.lng);
+                                console.log('픽업지 ~ : ', result.receive.deliveries[0].pickupAddress)
+                                console.log('목적지 ~ : ', result.receive.deliveries[0].deliveryAddress);
 
                                 query = "CALL accidentGps(" +
-                                "'" + "SAVE" + "'" +
-                                ", '" + "0" + "'" +
-                                ", '" + "" + "'" +
-                                ", '" + result.receive.drivingId + "'" +
-                                ", '" + "" + "'" +
-                                ", '" + "" + "'" +
-                                ", '" + "" + "'" +
-                                ", '" + result.receive.locationRecordDateTime + "'" +
-                                ", '" + result.receive.investigateDateTime + "'" +
-                                ", '" + result.receive.lat + "'" +
-                                ", '" + result.receive.lng + "'" +
-                                ", '" + "SEARCH FINISH" + "'" +
-                                ", '" + "0" + "'" +
-                                ", '" + result.receive.deliveries[0].pickupAddress + "'" +
-                                ", '" + result.receive.deliveries[0].deliveryAddress + "'" +
-                                ", '" + "" + "'" +
-                                ", '" + "" + "'" +
-                                ", '" + "" + "'" +
-                                ");";
+                                    "'" + "SAVE" + "'" +
+                                    ", '" + "0" + "'" +
+                                    ", '" + "" + "'" +
+                                    ", '" + result.receive.drivingId + "'" +
+                                    ", '" + "" + "'" +
+                                    ", '" + "" + "'" +
+                                    ", '" + "" + "'" +
+                                    ", '" + result.receive.locationRecordDateTime + "'" +
+                                    ", '" + result.receive.investigateDateTime + "'" +
+                                    ", '" + result.receive.lat + "'" +
+                                    ", '" + result.receive.lng + "'" +
+                                    ", '" + "SEARCH FINISH" + "'" +
+                                    ", '" + "0" + "'" +
+                                    ", '" + result.receive.deliveries[0].pickupAddress + "'" +
+                                    ", '" + result.receive.deliveries[0].deliveryAddress + "'" +
+                                    ", '" + "" + "'" +
+                                    ", '" + "" + "'" +
+                                    ", '" + "" + "'" +
+                                    ");";
 
                                 console.log(query);
 
@@ -900,6 +903,9 @@ module.exports = {
                                     "resDlvStAddr":result.receive.deliveries[0].pickupAddress,
                                     "resDlvEdAddr":result.receive.deliveries[0].deliveryAddress
                                 };
+
+                                console.log('반환값 : ', success);
+                                resolve(success)
                             }
 
 

@@ -4,6 +4,16 @@ function service_config() {
     var return_val = {
         "production" : [
             {
+                serviceName : "현대-대리",
+                dbAccess     : "simg_center",
+                bpk     : 0,
+                type : 'DAERI',
+                key: 'CB1C198B747B87D03DFF8FA2CE776F1D',
+                iv:'f95ef629cdc8e11a',
+                joinUrl     : "",
+                agreeUrl     : "",
+            },
+            {
                 serviceName : "배민커넥트",
                 dbAccess     : "hyundai_baemin_prod",
                 bpk     : 1,
@@ -90,8 +100,39 @@ function service_config() {
                 agreeUrl     : "https://connect-bike-doeat.simginsu.net/check",
 
             },
+            {
+                serviceName : "바로고",
+                dbAccess     : "hyundai_run2u_prod",
+                bpk     : 10,
+                type : 'BIKE',
+                key: 'B59AF5619C709B708DE7D07CA8EF6359',
+                iv:'24fd6008eb256184',
+                joinUrl     : "https://connect-bike-barogo.simginsu.net",
+                agreeUrl     : "https://connect-bike-barogo.simginsu.net/check",
+
+            },
+            {
+                serviceName : "공감파트너스",
+                dbAccess     : "hyundai_run2u_prod",
+                bpk     : 11,
+                type : 'BIKE',
+                key: 'B59AF5619C709B708DE7D07CA8EF6359',
+                iv:'24fd6008eb256184',
+                joinUrl     : "https://connect-bike-gonggam.simginsu.net/",
+                agreeUrl     : "https://connect-bike-gonggam.simginsu.net/check",
+            },
         ],
         "development" : [
+            {
+                serviceName : "현대-대리",
+                dbAccess     : "simg_center",
+                bpk     : 0,
+                type : 'DAERI',
+                key: 'CB1C198B747B87D03DFF8FA2CE776F1D',
+                iv:'f95ef629cdc8e11a',
+                joinUrl     : "",
+                agreeUrl     : "",
+            },
             {
                 serviceName : "배민커넥트",
                 dbAccess     : "hyundai_baemin_dev",
@@ -180,6 +221,17 @@ function service_config() {
 
             },
             {
+                serviceName : "바로고",
+                dbAccess     : "hyundai_run2u_dev",
+                bpk     : 10,
+                type : 'BIKE',
+                key: 'E995900C166C4340A4B6A7FC864E9B7E',
+                iv:'52759feb043a0909',
+                joinUrl     : "https://connect-bike-barogo-dev.simginsu.net/",
+                agreeUrl     : "https://connect-bike-barogo-dev.simginsu.net/check",
+
+            },
+            {
                 serviceName : "공감",
                 dbAccess     : "hyundai_run2u_dev",
                 bpk     : 11,
@@ -188,6 +240,17 @@ function service_config() {
                 iv:'dc7ee041c6033f59',
                 joinUrl     : "https://connect-bike-gonggam-dev.simginsu.net/",
                 agreeUrl     : "https://connect-bike-gonggam-dev.simginsu.net/check",
+
+            },
+            {
+                serviceName : "(주)캐치",
+                dbAccess     : "hyundai_run2u_dev",
+                bpk     : 12,
+                type : 'BIKE',
+                key: 'CC88FD60-3A71-11EF-9E64-6FAD2203D7C2',
+                iv:'dc7ee041c6033f59',
+                joinUrl     : "https://deliverycatch-test.simginsu.net/",
+                agreeUrl     : "https://deliverycatch-test.simginsu.net/check",
 
             },
         ]
