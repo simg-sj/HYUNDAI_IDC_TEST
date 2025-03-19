@@ -24,7 +24,7 @@ var svs = services[deployConfig.deploy];
 
 console.log('deploy 모드 : ', deployConfig.deploy)
 var banList = [1,5,3, 6]; // 작동금지 업체
-
+banList = [1,2,3,4,5,6,7,8,9,10];
 
 
 start();
@@ -104,6 +104,7 @@ function underwriteRequest(bpk, schema ){
         ", '" + '_recvFromDay' + "'" +
         ", '" + '_recvToDay' + "'" +
         ", '" + '_recvValidDay' + "'" +
+        ", '" + '_recvContractKey' + "'" +
         ");";
 
 
@@ -138,7 +139,7 @@ function sendData(obj, bpk){
 
 
 
-    // 전문 Object
+
     let underwriteObj = {
         "bizCode":"004",
         "resDrvrID": "",
@@ -171,8 +172,7 @@ function sendData(obj, bpk){
         "resInsdCo": "",
         "resProdCd": "",
         "resCoprCat": "",
-        "resTwhvcUsedUsage": "",
-        "resDsgn1ManOwCd" : "", // 지정1인 관계 코드 추가 [ 2024-01 ] by ICT - 오정현
+        "resTwhvcUsedUsage": ""
     };
 
 
@@ -189,13 +189,18 @@ function sendData(obj, bpk){
     underwriteObj.resAgmtEdDt = obj.reqPnoToDay; // 사전에 전달된 보험종기로만 전달해야함
 
     underwriteObj.resPlyNo = obj.reqPno;
+    underwriteObj.resDrvrOwrRl = obj.relation;  // resDrvrOwrRl 을 관계코드로 활용 [ 2024-01 ]
     // underwriteObj.resInsdCo = String(bpk).padStart(3,'0');
     underwriteObj.resCoprCat = String(bpk).padStart(3,'0');
     underwriteObj.resProdCd = "5802";
+    if(obj.bdSoyuja === 'bonin'){ // 본인인경우
+        underwriteObj.resDrvrOwrRl = ""; // 본인인경우 공백
+    }else{  //본인이 아닌경우 [ 지정 1인 인 경우 ]
+        underwriteObj.resDrvrOwrRl = obj.relation;  // resDrvrOwrRl 을 관계코드로 활용 [ 2024-01 ]
+    }
 
+    console.log('현대 전송 : ', underwriteObj);
 
-    console.log('underwriteObj CHECK : ',underwriteObj); // 전문내용 생성
-    return;
 
     network_api.network_h001(underwriteObj).then(function(result){
         console.log('현대 응답값', result);
@@ -217,12 +222,10 @@ function sendData(obj, bpk){
                 "text": msg,
                 "icon_emoji": ":ghost:"
             };
-            // 테스트계요청은 슬랙 처리 x
-            /*
-            network_api.slackWebHook(data).then(function(result){
+
+            network_api.simg_slackWebHook(data).then(function(result){
                 console.log(result);
             })
-             */
 
             return
         }
@@ -236,7 +239,9 @@ function sendData(obj, bpk){
             reqUnwrRsltDet:result.receive.reqUnwrRsltDet,
             reqUnwrCpltDt:result.receive.reqUnwrCpltDt,
             reqUnwrValidDt:result.receive.reqUnwrValidDt,
-            reqAutoInagAgmtEdDt:result.receive.reqAutoInagAgmtEdDt
+            reqAutoInagAgmtEdDt:result.receive.reqAutoInagAgmtEdDt,
+            reqErrTypCd:result.receive.reqErrTypCd,
+            resInagId:result.receive.resInagId // 체결이행동의 고유값 [ 2024-08-30 오픈 예정 ]
         }
 
         console.log(res_data)

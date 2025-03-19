@@ -32,7 +32,7 @@ svs.forEach(function(e){
 });
 
 
-sendMsg('ACCEPTED', '20240826'); // 수동 한번도 안보낸인원ㄴ
+sendMsg('ACCEPTED', '20241016'); // 수동 한번도 안보낸인원ㄴ
 // sendMsg('REJECTED', '20220529'); // 수동 한번도 안보낸인원ㄴ
 // sendMsg('EXPIRED', '20220529'); // 수동 한번도 안보낸인원ㄴ
 

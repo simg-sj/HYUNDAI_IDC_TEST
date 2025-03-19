@@ -24,7 +24,7 @@ var svs = services[deployConfig.deploy];
 
 
 
-var banList = [1,2,4,5,6,7,8,9,10]; // 작동금지 업체
+var banList = [0,2,3,4,5,6,7,8,9,10,11]; // 작동금지 업체
 /**
  * 갱신시 개인정보설계동의 여부 확인
  * 확인 절차
@@ -38,10 +38,16 @@ cron.schedule('10 30 09 * * *', () => {
     start();
 });
 
-start()
+/** 수동처리  **/
+// start('AGREECHECK'); // 개인정보동의 확인
+start('CONTRACTCHECK'); // 체결이행확인
 
-
-async function start(){
+/**
+ *
+ * @param process : 체크프로세스
+ * @returns {Promise<void>}
+ */
+async function start(process){
 
 
     /** 순차실행을 이용하여 진행 **/
@@ -54,14 +60,11 @@ async function start(){
         if(banList.indexOf(bpk) < 0){
             console.log("작동 대상 업체 ", service.serviceName);
             console.log("작동 대상 업체 ", bpk);
-            checkAgree(bpk, schema)
+            checkAgree(bpk, schema, process)
         }else{
             console.log("제외 대상 업체 ", service.serviceName);
 
         }
-
-
-
 
     }
 
@@ -74,15 +77,25 @@ async function start(){
 
 
 
-function checkAgree(bpk, schema){
+function checkAgree(bpk, schema, process){
+
+    let job = "";
+
+    if(process == 'AGREECHECK'){
+        job = 'RENEWCHECK';
+    }
+
+    if(process == 'CONTRACTCHECK'){
+        job = 'RENEW_C_LIST';
+    }
 
 
-    let job = 'RENEWCHECK';
 
     let query = "CALL hyundaiCheck("+
         "'" + job + "'" +
         ", '" + 0 + "'" +
         ", '" + bpk + "'" +
+        ", '" + "" + "'" +
         ", '" + "" + "'" +
         ", '" + "" + "'" +
         ", '" + "" + "'" +
@@ -99,47 +112,107 @@ function checkAgree(bpk, schema){
         let data = result[0];
         let valueRow = data;
 
-        /** 비동기 처리 ***/
-        const timer = ms => new Promise(res=>setTimeout(res,ms))
-        load(valueRow);
-        async function load(valueRow){
-            let obj;
-            for(var i=0; i< valueRow.length; i++){
-                obj = valueRow[i];
-                // console.log(obj);
-                sendData(obj, schema, bpk);
-                await timer(500);
+        if(process == 'CONTRACTCHECK'){
+
+            if (result[0][0].code == '999') {
+
+                console.log('체결이행체크대상없음');
+
+            }else{
+
+                /** 비동기 처리 ***/
+                const timer = ms => new Promise(res=>setTimeout(res,ms))
+                load(valueRow);
+                async function load(valueRow){
+                    let obj;
+                    for(var i=0; i< valueRow.length; i++){
+                        obj = valueRow[i];
+                        // console.log(obj);
+                        sendData(obj, schema, bpk, process);
+                        await timer(800);
+                    }
+                    console.log("end")
+                }
             }
-            console.log("end")
+
+        }else{
+
+            /** 비동기 처리 ***/
+            const timer = ms => new Promise(res=>setTimeout(res,ms))
+            load(valueRow);
+            async function load(valueRow){
+                let obj;
+                for(var i=0; i< valueRow.length; i++){
+                    obj = valueRow[i];
+                    // console.log(obj);
+                    await sendData(obj, schema, bpk, process);
+                    await timer(500);
+                }
+                console.log("end")
+            }
+
         }
+
 
     });
 
 
 }
 
-function sendData(obj, schema, bpk){
+async function sendData(obj, schema, bpk, process){
 
+    let data = {};
+    let S_JOB = "";
+    let U_JOB = "";
+    let resPlyNo = ""; // 체결이행에는 받은 정보가 들어가게끔 처리되어야한다.
+    let recvPlyNo = "";
+    /* 개인정보동의 확인 */
+    if(process == 'AGREECHECK'){
+        data = {
+            "bizCode":'003',
+            "drvrResdNo":obj.socialNo,
+            "agmtCncsAgrmReqDt":_dateUtil.GET_DATE("YYYYMMDDHHMMSS", "NONE",0),
+            "reqAgmtCncsAgrmRslt":"1",
+            "resAgmtCncsAgrmDt":"",
+            "resAgmtCncsAgrmValidDt":""
+        };
 
+        S_JOB = "RENEW_S";
+        U_JOB = "RENEW_U";
+    }
+    /* 체결이행 확인 */
+    if(process == 'CONTRACTCHECK'){
 
-    let data = {
-        "bizCode":'003',
-        "drvrResdNo":obj.socialNo,
-        "agmtCncsAgrmReqDt":_dateUtil.GET_DATE("YYYYMMDDHHMMSS", "NONE",0),
-        "reqAgmtCncsAgrmRslt":"1",
-        "resAgmtCncsAgrmDt":"",
-        "resAgmtCncsAgrmValidDt":""
-    };
+        data = {
+            "bizCode":'008',
+            "drvrResdNo":obj.socialNo,
+            "resPlyNo"  : obj.pNo,
+            "agmtCncsAgrmReqDt":_dateUtil.GET_DATE("YYYYMMDDHHMMSS", "NONE",0),
+            "reqAgmtCncsAgrmRslt":"", // 요청할때 빈값으로?
+            // "reqAgmtCncsAgrmRslt":"1",
+            "resAgmtCncsAgrmDt":"",
+            "resAgmtCncsAgrmValidDt":""
+        };
+
+        S_JOB = "RENEW_C_S";
+        U_JOB = "RENEW_C_U";
+    }
+
+    // console.log("request data Check : ", data);
 
     /* 알림톡 세팅 필요함 [ 09-10 일요일 ]*/
     network_api.network_h001(data).then(function(response){
 
         console.log("동의 결과 ", response);
 
-
+        if(process == 'CONTRACTCHECK'){
+            resPlyNo = data.resPlyNo;
+        }else{
+            resPlyNo = "";
+        }
 
         let query = "CALL hyundaiCheck("+
-            "'" + "RENEW_S" + "'" +
+            "'" + S_JOB + "'" +
             ", '" + 0 + "'" +
             ", '" + bpk + "'" +
             ", '" + data.drvrResdNo + "'" +
@@ -148,54 +221,92 @@ function sendData(obj, schema, bpk){
             ", '" + "" + "'" +
             ", '" + "" + "'" +
             ", '" + "" + "'" +
+            ", '" + resPlyNo + "'" +
             ");";
 
 
         console.log(query);
-        _mysqlUtil.mysql_proc_exec(query, schema).then(function(result){
+        _mysqlUtil.mysql_proc_exec(query, schema).then(async function (result) {
 
 
             // console.log(result)
             var hpk = result[0][0].rCnt;
 
 
-            if(response.code ==200){
-                if(response.receive.reqAgmtCncsAgrmRslt=='0'){
+            if (response.code == 200) {
+                if (response.receive.reqAgmtCncsAgrmRslt == '0') {
 
                     let responseData = {
-                        rCnt :0,
-                        msg : "동의 필요"
+                        rCnt: 0,
+                        msg: "동의 필요"
                     };
-                    console.log(responseData)
+                    console.log('동의 필요 response :', responseData);
 
                     // res.status(200).send(responseData);
-                }else{
+                } else if (response.receive.reqAgmtCncsAgrmRslt == '') {
 
                     let responseData = {
-                        rCnt :1,
-                        msg : "동의 완료"
+                        rCnt: 0,
+                        msg: "동의 대상 확인 필요"
+                    };
+                    /* 빈값으로 결과 받는 경우에는 받은 즉시 확인 절차 중단 후 슬랙에 알림톡 보낼 수 있도록 한다. */
+                    console.log('체결이행 미 대상자 response :', responseData);
+
+                    // let slackBotObj = {
+                    //     "channel": "#에러로그",
+                    //     "username": "현대해상 갱신 에러감지봇",
+                    //     "text": '체결이행동의 진행중 reqAgmtCncsAgrmRslt 값 누락. 점검 바랍니다.\n*갱신 체결이행 확인 중단*',
+                    //     "icon_emoji": ":ghost:"
+                    // };
+                    //
+                    // _apiUtil.simg_slackWebHook(data).then(function(result){
+                    //     console.log(result);
+                    //     return;
+                    // });
+
+                    // response.receive.reqAgmtCncsAgrmRslt = 0; // 값 0으로 설정한다.
+                } else if (response.receive.reqAgmtCncsAgrmRslt == '2'){ // 서류 스캔했을 때 ~
+
+                    let responseData = {
+                        rCnt: 2,
+                        msg: "서류스캔 동의 완료"
                     };
 
-                    console.log(responseData)
+                    console.log('서류 동의 완료 response : ', responseData);
+
+
+
+                } else {
+
+                    let responseData = {
+                        rCnt: 1,
+                        msg: "동의 완료"
+                    };
+
+                    console.log('동의완료 response :', responseData);
                     // res.status(200).send(responseData);
                 }
-            }else{
+            } else {
                 let responseData = {
-                    rCnt :0,
-                    msg : "동의 필요"
+                    rCnt: 0,
+                    msg: "동의 필요"
                 };
 
 
                 console.log(responseData)
 
 
-
-
             }
 
 
-            let query = "CALL hyundaiCheck("+
-                "'" + "RENEW_U" + "'" +
+            if (process == 'CONTRACTCHECK') {
+                recvPlyNo = response.receive.resPlyNo;
+            } else {
+                recvPlyNo = "";
+            }
+
+            let query = "CALL hyundaiCheck(" +
+                "'" + U_JOB + "'" +
                 ", '" + hpk + "'" +
                 ", '" + bpk + "'" +
                 ", '" + data.drvrResdNo + "'" +
@@ -204,11 +315,11 @@ function sendData(obj, schema, bpk){
                 ", '" + response.code + "'" +
                 ", '" + response.receive.resAgmtCncsAgrmDt + "'" +
                 ", '" + response.receive.resAgmtCncsAgrmValidDt + "'" +
+                ", '" + recvPlyNo + "'" +
                 ");";
 
-
             console.log(query);
-            _mysqlUtil.mysql_proc_exec(query, schema).then(function(result){
+            await _mysqlUtil.mysql_proc_exec(query, schema).then(function (result) {
 
 
                 console.log(result)
@@ -234,8 +345,3 @@ function sendData(obj, schema, bpk){
 
 
 }
-
-
-
-
-

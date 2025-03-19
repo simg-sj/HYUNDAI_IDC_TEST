@@ -16,7 +16,6 @@ module.exports={
         let url = connection.host;
         let port = connection.port;
         let endpoint = "http://"+url + ":" +port;
-        console.log('endpoint : ', endpoint);
 
 
         return new Promise(function(resolve,reject){
@@ -51,7 +50,7 @@ module.exports={
     },
     slackWebHook : function(data, url){
         if(!url){
-            var BASEURL = "https://hooks.slack.com/services/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";
+            var BASEURL = "https://hooks.slack.com/services/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";
             url = BASEURL;
         }
 
@@ -61,6 +60,36 @@ module.exports={
         return new Promise(function (resolve, reject) {
 
             unirest.post(url)
+
+                .headers(
+                    {
+                        'Content-Type': 'application/json',
+                    })
+                .type('json')
+                .json(data)
+                .end(function (response) {
+                    console.log('from SLACK RESPONSE : ', response.body);
+                    // console.log('send ', data);
+                    let d = {
+                        'receive':response.body,
+                        // 'sendD':data
+
+                    }
+                    resolve(d);
+                });
+        });
+    },
+    simg_slackWebHook : function(data){
+
+        var BASEURL = "https://center-api.simg.kr/v1/api/simg/slackbot";
+
+
+        console.log(BASEURL);
+        console.log("SLACK : ", data);
+
+        return new Promise(function (resolve, reject) {
+
+            unirest.post(BASEURL)
 
                 .headers(
                     {
@@ -167,6 +196,20 @@ module.exports={
                 .end(function (response) {
                     console.log('from  RESPONSE : ', response.body);
                     // console.log('send ', data);
+
+
+                    if(!response.body.deliveries[0]){
+
+                        let t = {pickupAddress : "",deliveryAddress:"" };
+                        response.body.deliveries.push(t);
+                    }
+
+                    if(!response.body.deliveries[0]){
+                        let t = {pickupAddress : "",deliveryAddress:"" };
+                        response.body.deliveries.push(t);
+                    }
+
+
                     let d = {
                         'receive':response.body,
                         // 'sendD':data
@@ -288,4 +331,28 @@ module.exports={
                 });
         });
     },
+    sendAligoSms: function(data){
+        let _this = this;
+
+        return new Promise(function (resolve, reject) {
+            console.log('Aligo Lambda AWS SERVICE ~!');
+            unirest.post('https://0j8iqqmk2l.execute-api.ap-northeast-2.amazonaws.com/aligo-send')
+                .headers(
+                    {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    })
+                .type('json')
+                .json(data)
+                .end(function (response) {
+                    console.log('from AWS LAMBDA_SEND: ', response.body);
+                    console.log('send ', data);
+                    let d = {
+                        'receive':response.body,
+                        'sendD':data
+
+                    }
+                    resolve(d);
+                });
+        });
+    }
 }

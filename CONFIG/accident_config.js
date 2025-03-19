@@ -137,6 +137,14 @@ function accident_config() {
 
 
             },
+            {
+                apiUrl : "https://deliverycatch-test.simginsu.net",
+                route     : "/api/v1/request/client/accident",
+                bpk     : 12,
+                type : 'BIKE',
+
+
+            },
         ]
     };
     return return_val;

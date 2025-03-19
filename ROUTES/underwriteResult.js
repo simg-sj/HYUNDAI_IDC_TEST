@@ -26,8 +26,7 @@ module.exports = {
      *      "reqCoprCat":"001",                           -- 업체코드 [ bpk ]
      *      "reqTwhvcUsedUsage":" ",
      *      "reqPlyNo":"M2023L90995300000",               -- 증권번호
-     *      "reqErrTypCd":null,                            -- 유효성검사시 에러코드
-     *      "resInagId": ""                               -- 체결이행동의 고유키값 [ 2024-08-30 오픈 예정 ]
+     *      "reqErrTypCd":null                            -- 유효성검사시 에러코드
      * }
      *
      */
@@ -46,21 +45,20 @@ module.exports = {
             let dpk = request_data.reqDrvrID;
             let dName = request_data.reqDrvrNm;
             let reqErrTypCd = request_data.reqErrTypCd; // 심사전 유효성검사시 에러관련 코드
-            let result = "";
+            let result = filterResult(request_data.reqUnwrRslt);
             let resultDetail = "";
+            // let resultDetail = filterResultDetail(request_data.reqUnwrRsltDet);
             console.log('유효성체크 값 : ', reqErrTypCd);
             if(reqErrTypCd === null){
                 result = filterResult(request_data.reqUnwrRslt);
                 resultDetail = filterResultDetail(request_data.reqUnwrRsltDet);
             }else{
-                result = 'ERROR';
+                result = 'REJECTED';
                 resultDetail = filterErrorCodeResult(reqErrTypCd);
 
             }
 
 
-            // let result = filterResult(request_data.reqUnwrRslt);
-            // let resultDetail = filterResultDetail(request_data.reqUnwrRsltDet);
             let dambo = '';
             let recvDay = request_data.reqUnwrCpltDt;
             let validDay = request_data.reqUnwrValidDt;
@@ -128,7 +126,7 @@ module.exports = {
                 case '04': returnValue = 'ERROR'; break;  // 오류
             }
 
-            return returnValue;
+            return returnValue
 
         }
 
@@ -146,7 +144,7 @@ module.exports = {
                 case '99': returnValue = '기타'; break;
             }
 
-            return returnValue;
+            return returnValue
 
         }
 
@@ -160,7 +158,7 @@ module.exports = {
 
             }
 
-            return returnValue;
+            return returnValue
 
         }
 

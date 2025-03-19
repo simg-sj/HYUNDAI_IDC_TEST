@@ -224,7 +224,7 @@ module.exports = {
                                     });
                                     break;
                                 default:
-                                    if (['4', '6', '7', '8', '9', '10', '11'].includes(data.bpk)) {
+                                    if (['4', '6', '7', '8', '9', '10', '11', '12', '13'].includes(data.bpk)) {
                                         console.log("PLATFORM GPS"); // 비욘드, 배달시대, 배고파딜리버리, 두잇
                                         _gpsService.PLATFORM(request_data, svs[index].dbAccess, data.bpk).then(function (success) {
                                             resolve(success);
